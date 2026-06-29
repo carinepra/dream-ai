@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dream AI — Carine Prá de Carvalho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500&family=IBM+Plex+Sans:wght@400;500&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F0C0A;
+    --surface: #1A1512;
+    --accent: #B65A3C;
+    --text: #EDE6DF;
+    --text-secondary: rgba(237,230,223,0.64);
+    --text-ghost: rgba(237,230,223,0.40);
+    --border: rgba(237,230,223,0.08);
+    --border-mid: rgba(237,230,223,0.12);
+    --font-serif: 'Source Serif 4', Georgia, serif;
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* Logo wordmark */
+  .delivery-logo {
+    padding: 40px 0 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+  .delivery-logo-dream {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: rgba(237,230,223,0.80);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .delivery-logo-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #B65A3C;
+    opacity: 0.90;
+    margin: 0 1px 1px;
+    vertical-align: baseline;
+    position: relative;
+    top: 2px;
+  }
+  .delivery-logo-ai {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: rgba(237,230,223,0.45);
+    letter-spacing: 0.03em;
+    line-height: 1;
+  }
+
+  /* Opening */
+  .opening {
+    padding: 48px 0 80px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .opening-line {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.25;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+
+  .opening-line em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .opening-meta {
+    font-size: 14px;
+    color: var(--text-ghost);
+    font-family: var(--font-sans);
+  }
+
+  /* Section headers */
+  .section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section:last-child {
+    border-bottom: none;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-ghost);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+
+  /* Timeline */
+  .timeline-wrapper {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline-review-track {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: rgba(182,90,60,0.45);
+  }
+
+  .timeline-review-track::before {
+    content: 'reviewed by a separate Claude instance before advancing';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: right center;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(182,90,60,0.55);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 8px 1fr;
+    gap: 0 24px;
+    margin-bottom: 56px;
+    position: relative;
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-dot {
+    display: flex;
+    justify-content: center;
+    padding-top: 7px;
+    flex-shrink: 0;
+  }
+
+  .timeline-dot::before {
+    content: '';
+    display: block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .timeline-content {
+    padding-bottom: 0;
+  }
+
+  .timeline-step {
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-ghost);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .timeline-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .timeline-body {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  /* Video placeholder */
+  .video-slot {
+    background: var(--surface);
+    border: 1px solid var(--border-mid);
+    border-radius: 6px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    text-decoration: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .video-slot:hover {
+    border-color: rgba(182,90,60,0.4);
+  }
+
+  .video-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(182,90,60,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .video-icon svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--accent);
+    margin-left: 2px;
+  }
+
+  .video-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .video-label strong {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .video-duration {
+    font-size: 12px;
+    color: var(--text-ghost);
+  }
+
+  /* Workflow section */
+  .workflow-principle {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .workflow-principle:last-child {
+    border-bottom: none;
+  }
+
+  .principle-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .principle-body {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* Decisions */
+  .decision {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .decision:last-child {
+    border-bottom: none;
+  }
+
+  .decision-number {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .decision-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .decision-body {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* Prompts */
+  .prompt-group-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(182,90,60,0.60);
+    font-weight: 500;
+    margin-bottom: 16px;
+    margin-top: 8px;
+  }
+
+  .prompt-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prompt-row:last-of-type {
+    border-bottom: none;
+  }
+
+  .prompt-name {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .prompt-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .prompt-block {
+    background: var(--surface);
+    border: 1px solid var(--border-mid);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .prompt-label {
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-ghost);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .prompt-purpose {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .prompt-quote {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    padding-left: 16px;
+    border-left: 1px solid var(--accent);
+    opacity: 0.9;
+  }
+
+  /* CTA */
+  .cta-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .cta-primary:hover { opacity: 0.85; }
+
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    border: 1px solid var(--border-mid);
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cta-secondary:hover {
+    border-color: rgba(237,230,223,0.25);
+    color: var(--text);
+  }
+
+  /* Closing */
+  .closing {
+    padding: 80px 0 96px;
+    text-align: center;
+  }
+
+  .closing-line {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .closing-name {
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--text-ghost);
+  }
+
+  /* Footer safety line */
+  .safety {
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-ghost);
+    text-align: center;
+  }
+
+  @media (max-width: 560px) {
+    .opening { padding: 64px 0 56px; }
+    .section { padding: 48px 0; }
+    .wrap { padding: 0 20px; }
+    .cta-row { flex-direction: column; }
+    .cta-primary, .cta-secondary { justify-content: center; }
+  }
+
+  /* ---- Prompt Drawer -------------------------------------------------- */
+  .drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,12,10,0.70);
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 100;
+  }
+  .drawer-overlay.is-open {
+    opacity: 1; visibility: visible;
+  }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(540px, 92vw);
+    background: #1A1512;
+    border-left: 1px solid rgba(237,230,223,0.08);
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    z-index: 101;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .drawer-overlay.is-open .drawer {
+    transform: translateX(0);
+  }
+  .drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid rgba(237,230,223,0.08);
+    flex-shrink: 0;
+  }
+  .drawer-title {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(237,230,223,0.40); font-weight: 500;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  .drawer-name {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300; font-size: 18px;
+    color: rgba(237,230,223,0.90);
+    margin-top: 4px;
+  }
+  .drawer-close {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; cursor: pointer;
+    color: rgba(237,230,223,0.40);
+    font-size: 20px; line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+  }
+  .drawer-close:hover { color: rgba(237,230,223,0.80); }
+  .drawer-body {
+    flex: 1; overflow-y: auto;
+    padding: 28px 28px 40px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .drawer-body::-webkit-scrollbar { width: 4px; }
+  .drawer-body::-webkit-scrollbar-track { background: transparent; }
+  .drawer-body::-webkit-scrollbar-thumb { background: rgba(237,230,223,0.12); border-radius: 2px; }
+  .drawer-prompt-text {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 14px; line-height: 1.8;
+    color: rgba(237,230,223,0.64);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .drawer-prompt-text strong {
+    color: rgba(237,230,223,0.90);
+    font-weight: 500;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Read prompt link */
+  .prompt-read-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 12px;
+    font-size: 13px; color: rgba(182,90,60,0.80);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    cursor: pointer; background: none; border: 0; padding: 0;
+    transition: color 0.2s ease;
+  }
+  .prompt-read-link:hover { color: rgba(182,90,60,1); }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Logo -->
+  <div class="delivery-logo">
+    <span class="delivery-logo-dream">Dream</span><span class="delivery-logo-dot"></span><span class="delivery-logo-ai">AI</span>
+  </div>
+
+  <!-- Opening -->
+  <div class="opening">
+    <p class="opening-line">It's 2am. A combat veteran just woke from a nightmare.<br><em>This is what I built for that moment.</em></p>
+    <p class="opening-meta">Dream AI — Carine Prá de Carvalho &nbsp;·&nbsp; June 2026</p>
+  </div>
+
+  <!-- Links -->
+  <div class="section">
+    <p class="section-label">The deliverable</p>
+    <div class="cta-row">
+      <a href="dream-ai.html" class="cta-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Open the prototype
+      </a>
+      <a href="#loom" class="cta-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="currentColor"/></svg>
+        Watch the process
+      </a>
+    </div>
+
+    <p style="font-size:13px; color:var(--text-ghost); margin-top:32px; margin-bottom:12px; letter-spacing:0.06em; text-transform:uppercase; font-weight:500;">Demo shortcuts</p>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:8px; line-height:1.6;">Three moments in the 10-night protocol — open any directly without completing the full creation flow.</p>
+    <p style="font-size:13px; color:var(--text-ghost); margin-bottom:16px; line-height:1.6;">Both files (<code style="font-family:monospace; font-size:12px; color:var(--text-secondary);">dream-ai-delivery.html</code> and <code style="font-family:monospace; font-size:12px; color:var(--text-secondary);">dream-ai.html</code>) must be in the same folder for the prototype link and demo shortcuts to work. If the links below don't open, add <code style="font-family:monospace; font-size:12px; color:var(--text-secondary);">?night=4</code> or <code style="font-family:monospace; font-size:12px; color:var(--text-secondary);">?night=10</code> directly to the URL of <code style="font-family:monospace; font-size:12px; color:var(--text-secondary);">dream-ai.html</code> in your browser.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+      <a href="dream-ai.html?night=1" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border:1px solid rgba(237,230,223,0.12); border-radius:4px; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:rgba(237,230,223,0.64); text-decoration:none;">Night 1 — first rehearsal</a>
+      <a href="dream-ai.html?night=4" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border:1px solid rgba(237,230,223,0.12); border-radius:4px; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:rgba(237,230,223,0.64); text-decoration:none;">Night 4 — ritual in progress</a>
+      <a href="dream-ai.html?night=10" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border:1px solid rgba(237,230,223,0.12); border-radius:4px; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:rgba(237,230,223,0.64); text-decoration:none;">Night 10 — Transformation Summary</a>
+    </div>
+  </div>
+
+  <!-- How I worked with AI -->
+  <div class="section" id="workflow">
+    <p class="section-label">How I worked with AI</p>
+
+    <div class="workflow-principle">
+      <p class="principle-title">The criteria were mine. The output was the AI's. The decisions were mine.</p>
+      <p class="principle-body">I used AI as a series of specialist collaborators — each with a defined role, a specific criteria set, and a clear handoff. Research before tools. Design before code. Evaluation before advancing.</p>
+    </div>
+
+    <div class="workflow-principle">
+      <p class="principle-title">Research before tools.</p>
+      <p class="principle-body">IRT protocol, the veteran audience's relationship with help-seeking, and the failure modes of mental health apps — studied before any tool was opened. That research became the criteria every AI output was measured against. Mobbin for mobile UX patterns. 21st.dev for component reference.</p>
+    </div>
+
+    <div class="workflow-principle">
+      <p class="principle-title">Design before code.</p>
+      <p class="principle-body">Claude Design locked the visual system before Claude Code opened. Colors, typography, motion rules, component specs — handed over as a non-negotiable foundation. No values invented during build.</p>
+    </div>
+
+    <div class="workflow-principle">
+      <p class="principle-title">Evaluation before advancing.</p>
+      <p class="principle-body">Every output — from Claude Design and Claude Code — was evaluated by a separate Claude instance before advancing. Not a technical review: does this serve a combat veteran or a survivor of assault at 2am? Failures named by specific element. No screen advanced until it passed. That's what the amber line in the timeline represents.</p>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="section" id="loom">
+    <p class="section-label">The process</p>
+
+    <div class="timeline-wrapper">
+    <div class="timeline-review-track"></div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <p class="timeline-step">Step 01</p>
+        <p class="timeline-title">Research and clinical grounding</p>
+        <p class="timeline-body">IRT protocol. Nightmare disorder as an independent suicidality risk factor in veterans. How mental health apps fail this audience before earning trust. Every design decision has a clinical reason — this is where those reasons were established.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <p class="timeline-step">Step 02</p>
+        <p class="timeline-title">Prompt chain — before any tool was opened</p>
+        <p class="timeline-body">14 prompts — context, constraints, orchestration, skeleton, every screen, two-persona critical review — written and evaluated before any tool was opened. The build began only when the chain was complete.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <p class="timeline-step">Step 03</p>
+        <p class="timeline-title">Visual direction — Claude Design</p>
+        <p class="timeline-body">Three expressions of Vigil proposed. I chose The Threshold — darkness with a ground beneath it. After a nightmare, having a surface to stand on is the exit signal. Not an aesthetic choice; a clinical one.</p>
+        <a href="https://www.loom.com/share/1a0386b1c1b3445f8f340ddd4c090778" class="video-slot" target="_blank" rel="noopener">
+          <div class="video-icon">
+            <svg viewBox="0 0 12 12"><path d="M2 1.5l8 4.5-8 4.5V1.5z"/></svg>
+          </div>
+          <div class="video-label">
+            <strong>Claude Design session</strong>
+            <span class="video-duration">~5 min</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <p class="timeline-step">Step 04</p>
+        <p class="timeline-title">Foundation — Claude Code</p>
+        <p class="timeline-body">Design system as CSS tokens. Frame, navigation, persistent elements, microphone pulse — all before any screen. The pulse deceleration is a clinical specification: gradual deceleration supports nervous system regulation.</p>
+        <a href="https://www.loom.com/share/e2974e225fe94e3f83a6074746a8db2b" class="video-slot" target="_blank" rel="noopener">
+          <div class="video-icon">
+            <svg viewBox="0 0 12 12"><path d="M2 1.5l8 4.5-8 4.5V1.5z"/></svg>
+          </div>
+          <div class="video-label">
+            <strong>Claude Code — 5 chats, decisions, process</strong>
+            <span class="video-duration">~5 min</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <p class="timeline-step">Step 05</p>
+        <p class="timeline-title">Critical screens — Claude Code</p>
+        <p class="timeline-body">Record, Deepen, Rescript — where the product earns trust or loses it. Each evaluated: would a combat veteran or survivor of assault close the app here — and why? Every correction named against product criteria, not engineering preference.</p>
+        <a href="https://www.loom.com/share/f79d5812e7e8421f90bdf5338a0c4ee8" class="video-slot" target="_blank" rel="noopener">
+          <div class="video-icon">
+            <svg viewBox="0 0 12 12"><path d="M2 1.5l8 4.5-8 4.5V1.5z"/></svg>
+          </div>
+          <div class="video-label">
+            <strong>Prototype walkthrough — part 1</strong>
+            <span class="video-duration">~5 min</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <p class="timeline-step">Step 06</p>
+        <p class="timeline-title">The prototype</p>
+        <p class="timeline-body">Record → Analyze → Deepen → Rescript → Watch → Heal. Watch treated as the hero — the moment the clinical mechanism is felt, not explained. Ten nights. One word, entirely the user's.</p>
+        <a href="https://www.loom.com/share/598c728d42864216af619bd961467f3e" class="video-slot" target="_blank" rel="noopener">
+          <div class="video-icon">
+            <svg viewBox="0 0 12 12"><path d="M2 1.5l8 4.5-8 4.5V1.5z"/></svg>
+          </div>
+          <div class="video-label">
+            <strong>Prototype walkthrough — part 2</strong>
+            <span class="video-duration">~5 min</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- Key decisions -->
+  <div class="section">
+    <p class="section-label">Three decisions worth naming</p>
+
+    <div class="decision">
+      <p class="decision-number">01</p>
+      <p class="decision-title">No onboarding. The Record screen is the onboarding.</p>
+      <p class="decision-body">For an audience that resists help-seeking, explanation before action is weight they weren't carrying. The screen's job is to already be ready. The microphone is there. Nothing else.</p>
+    </div>
+
+    <div class="decision">
+      <p class="decision-number">02</p>
+      <p class="decision-title">Vigil with inhabited warmth — not cold, not soft.</p>
+      <p class="decision-body">Coldness reads as abandonment. Performed warmth reads as condescension. The direction: warmth that was already here before the user arrived. Residual, not emanating. The veteran reads it as vigilance. The survivor reads it as a space that was already safe.</p>
+    </div>
+
+    <div class="decision">
+      <p class="decision-number">03</p>
+      <p class="decision-title">The word comes from inside the nightmare, not after it.</p>
+      <p class="decision-body">In Deepen Q2, the user names what they feel at the worst moment. That word — typed, never spoken — flows verbatim into Watch and the Summary. Captured inside the nightmare, before any rescript. It cannot be faked or generated. It can only come from the user, at that moment.</p>
+    </div>
+
+    <div class="decision">
+      <p class="decision-number">04</p>
+      <p class="decision-title">Night 10 shows the distance between two answers.</p>
+      <p class="decision-body">What the user called the feeling on Night 1. What they say is different on Night 10. The summary is the space between those two answers — not a celebration, not a score. After "Carry it.", everything fades except their word. Then it goes. "Come back when you need to." The product doesn't close. The user does.</p>
+    </div>
+
+  </div>
+
+  <!-- Representative prompts -->
+  <div class="section">
+    <p class="section-label">The prompt chain</p>
+
+    <div class="prompt-group-label">Context and foundation — Claude Code</div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P1 · Dream AI Context</div>
+      <div class="prompt-desc">Anchors every session in the user, the clinical mechanism, and Vigil as a decision filter — not an aesthetic. Pasted once at the start of every Claude Code session.<br><button class="prompt-read-link" data-prompt="context">Read the full prompt →</button></div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P2 · Dream AI Constraints</div>
+      <div class="prompt-desc">Active reference pasted before every screen. Mobile frame, motion rules, copy rule, persistent elements, evaluation criteria. The engineer consults this per screen, not once.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P3 · Orchestrator</div>
+      <div class="prompt-desc">Forces the AI to name each screen's emotional job and build tier before writing a line of code. A build that begins on a misunderstanding produces screens that can't talk to each other.<br><button class="prompt-read-link" data-prompt="orchestrator">Read the full prompt →</button></div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P4 · Skeleton</div>
+      <div class="prompt-desc">CSS tokens, frame, navigation, persistent elements, microphone pulse — before any screen. Everything inherits from this.</div>
+    </div>
+
+    <div class="prompt-group-label" style="margin-top: 32px;">Screen prompts — Claude Code</div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P5 · Record · Tier 1</div>
+      <div class="prompt-desc">First act of trust. Three states, two user entry modes, one clinical pulse. The screen's job is to already be ready.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P6 · Analyze · Tier 2</div>
+      <div class="prompt-desc">The product's first response. One flowing synthesis in the sleep pattern register — never therapy, never assessment, never a verdict.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P7 · Deepen · Tier 3</div>
+      <div class="prompt-desc">Two rounds of questions, each independently skippable. Four questions that open something without demanding anything.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P8 · Rescript · Tier 1</div>
+      <div class="prompt-desc">The pivot. Three exits from the nightmare, one suggested by position only. The word that goes into the film and the Summary was captured in Deepen Q2 — when the user named the feeling at the worst moment. Rescript is the choice of direction, not the capture of the word.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P9 · Watch · Tier 1</div>
+      <div class="prompt-desc">The hero. Zero UI during playback. Particles, ambient sound, narration in Ground sequence. The user's word woven into arrival — verbatim, never announced.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P10 · Heal + Transformation Summary</div>
+      <div class="prompt-desc">Night 1: mechanism and reminder. Nights 2–9: ritual, nothing added. Night 10: one question, then the distance between two answers.</div>
+    </div>
+
+    <div class="prompt-group-label" style="margin-top: 32px;">Review — Claude Code</div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">P11 · Critical Review</div>
+      <div class="prompt-desc">The AI stops being the engineer. Two walkthroughs — combat veteran, then survivor of assault. Findings named by specific element. No fixes until findings are confirmed and approved.<br><button class="prompt-read-link" data-prompt="review">Read the full prompt →</button></div>
+    </div>
+
+    <div class="prompt-group-label" style="margin-top: 32px;">Visual direction — Claude Design</div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">CD-1 · Emotional Direction</div>
+      <div class="prompt-desc">Three expressions of Vigil proposed before any color or type decision. One chosen and locked as the anchor for everything that follows.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">CD-2 · Design System Foundation</div>
+      <div class="prompt-desc">Every token justified against the user at 2am. Color, typography, spacing, motion — derived from the emotional direction. No value invented during build.</div>
+    </div>
+
+    <div class="prompt-row">
+      <div class="prompt-name">CD-3 · Components and Screen References</div>
+      <div class="prompt-desc">Five components at every state. Three screen references named by what they remove, not what they contain.</div>
+    </div>
+
+    <div class="prompt-block" style="margin-top: 32px;">
+      <p class="prompt-label">From the Critical Review prompt</p>
+      <p class="prompt-quote">"'The copy feels off' is not a finding. 'The word processing in the Analyze transition implies the app is evaluating the recording' is a finding."</p>
+    </div>
+
+  </div>
+
+  <!-- Next steps -->
+  <div class="section">
+    <p class="section-label">What comes next</p>
+
+    <p style="font-size:15px; color:var(--text-secondary); line-height:1.7; margin-bottom:40px;">The core clinical flow is here. What a production version would need:</p>
+
+    <div class="decision">
+      <p class="decision-number">Prototype limitation — noted consciously</p>
+      <p class="decision-title" style="font-size:16px;">The suggested ending is mocked</p>
+      <p class="decision-body">Hardcoded as "The Feeling Backs Down" for all users in this prototype. In production, determined by AI analysis of the recording and Deepen responses — matching the emotional hotspot to the ending most likely to resolve it.</p>
+    </div>
+
+    <div class="decision">
+      <p class="decision-number">UX — what the prototype defers</p>
+      <p class="decision-title" style="font-size:16px;">The experience beyond the first 10 nights</p>
+      <p class="decision-body">Reminder editing after Night 1. Settings layer — delete, progress, IRT information. What happens after Night 10. Pause state for missed nights. VoiceOver and TalkBack support. Haptic feedback on the ritual entry and "Carry it." — not achievable in HTML.</p>
+    </div>
+
+    <div class="decision">
+      <p class="decision-number">Product — decisions that need owners</p>
+      <p class="decision-title" style="font-size:16px;">The questions this prototype surfaces but doesn't answer</p>
+      <p class="decision-body">Can the user begin again after Night 10? How does the product handle relapse? Multiple active nightmares? Clinician summaries? Each requires a therapist and a product team in the same room — not a prototype.</p>
+    </div>
+
+    <div class="decision">
+      <p class="decision-number">Clinical — what a real product requires</p>
+      <p class="decision-title" style="font-size:16px;">The work that happens before launch</p>
+      <p class="decision-body">IRT psychologist validation. Efficacy study with veterans and assault survivors. VA prescription integration. Crisis protocol for acute risk. HIPAA-compliant storage. A real AI-generated film — which this prototype mocks with particles and narration.</p>
+    </div>
+
+    <div class="decision" style="border-bottom:none;">
+      <p class="decision-number">Further reading</p>
+      <p class="decision-title" style="font-size:16px;">The research this product is built on</p>
+      <p class="decision-body" style="margin-bottom:0;">
+        <a href="https://aasm.org/fda-approves-nightware-app-treat-nightmares/" target="_blank" rel="noopener" style="color:var(--text-secondary); text-decoration:underline; text-underline-offset:3px;">AASM guidelines for nightmare disorder treatment</a><br>
+        <a href="https://www.sciencedirect.com/science/article/pii/S1697260025001152" target="_blank" rel="noopener" style="color:var(--text-secondary); text-decoration:underline; text-underline-offset:3px;">IRT associated with reduced nightmare severity and suicidal symptoms (2025)</a><br>
+        <a href="https://nightware.com" target="_blank" rel="noopener" style="color:var(--text-secondary); text-decoration:underline; text-underline-offset:3px;">NightWare — complementary approach, FDA-cleared digital therapeutic</a>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Closing -->
+  <div class="closing">
+    <p class="closing-line">Only 4% of mental health app users continue past 15 days.<br>This product asks for 10.<br>Every decision here is a dignity decision.</p>
+    <p class="closing-name">Carine Prá de Carvalho &nbsp;·&nbsp; carinepradecarvalho@gmail.com</p>
+  </div>
+
+  <!-- Safety line -->
+  <div class="safety">
+    Dream AI uses AI-powered IRT to help transform nightmares. Not a substitute for professional mental health care.
+  </div>
+
+
+  <!-- Prompt Drawer -->
+  <div class="drawer-overlay" id="drawer-overlay" role="dialog" aria-modal="true" aria-labelledby="drawer-name">
+    <div class="drawer" id="drawer">
+      <div class="drawer-header">
+        <div>
+          <p class="drawer-title" id="drawer-title">Prompt</p>
+          <p class="drawer-name" id="drawer-name"></p>
+        </div>
+        <button class="drawer-close" id="drawer-close" aria-label="Close">×</button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-prompt-text" id="drawer-prompt-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var PROMPTS = {
+      context: {
+        name: 'Dream AI Context',
+        label: 'Context and foundation',
+        text: `You are a senior frontend engineer who has built clinical tools before — tools where every interaction either earns trust or loses it, and there is no neutral. You build for the moment that matters most, not for the average case.
+
+The people using this product are primarily U.S. combat veterans, with a significant secondary audience of survivors of assault and trauma-related PTSD. It is likely 2am. They just woke from a nightmare. Nightmare disorder in this population is an independent risk factor tied to suicidality — this is not a wellness app, and nothing you build should feel like one. They resist help-seeking. They will leave at the first moment something feels extractive, clinical, or like it wants something from them before it has earned it. Survivors of assault may have acute sensitivity to anything that implies observation, surveillance, or judgment.
+
+The product is Dream AI — an AI-powered Image Rehearsal Therapy tool. IRT is the AASM Level A gold standard for nightmare treatment. Clinical credibility comes from IRT research and AASM only.
+
+The six-step flow: Record → Analyze → Deepen → Rescript → Watch → Heal. The emotional arc: Fear → Understanding → Agency → Relief. The experience should feel heavier at the start and lighter by the end — not dramatically, just enough that the user feels the weight lifting without being able to name what changed. This decompression is expressed through typography weight, spacing, and icon weight — not through color or brightness.
+
+One piece of state connects three screens and must never break: the exact word or phrase the user types in Rescript appears verbatim in Watch narration and at the center of Transformation Summary. Not paraphrased, not interpreted — verbatim. If the user leaves it blank, a neutral placeholder is used. Never generated copy pretending to be the user's word. If this thread breaks, the co-authorship collapses and the clinical mechanism with it.
+
+[TASK]
+Before any code, confirm understanding in one sentence each:
+
+1. Who is using this at 2am and what have they just experienced?
+2. What is the clinical mechanism and why does 10 nights exist?
+3. What breaks if the Rescript word doesn't reach Watch and Summary — and what happens if the user left it blank?
+4. What does Vigil mean as a decision filter, not an aesthetic?
+5. What does the microphone deceleration do clinically?
+6. Name one decision you'd make differently for a survivor of assault than for a combat veteran — and why.
+
+If any answer is generic rather than specific to this product and this user, identify the gap and ask for clarification before proceeding. Do not advance on a generic answer.
+
+Do not propose any code until answers are confirmed.`
+      },
+      orchestrator: {
+        name: 'Orchestrator',
+        label: 'Before any screen is built',
+        text: `You are about to build a six-step clinical product for people who are awake at 2am because a nightmare woke them. Before any screen is built, you need to understand what each screen is doing emotionally — not functionally. A screen that works technically but fails emotionally has failed. For this audience, those are the same failure.
+
+The emotional arc is Fear → Understanding → Agency → Relief. Every screen has a specific job within that arc.
+
+Record sits at Fear. The screen's job is not to collect audio — it is to make the act of speaking feel like the least effortful thing they could do. If it adds any weight to what they're already carrying, it has failed.
+
+Analyze sits at the transition from Fear to Understanding. The moment it sounds like emotional processing or assessment, it has crossed into therapy. That line does not move.
+
+Deepen sits at Understanding. The screen's job is not to gather data — it is to ask the one question that opens something without demanding anything.
+
+Rescript sits at the transition from Understanding to Agency. The AI proposes. The user decides. One word or phrase, typed by the user, goes into everything that follows. That word is the pivot point of the entire product.
+
+Watch sits at Agency moving into Relief. Its job is not to play a film — it is to put the user somewhere else, fully, without reminder that they are using an app.
+
+Heal sits at Relief. Night 1: give the user one true thing about why this works, then ask once if they want a reminder. Nights 2–9: the ritual is the repetition. Night 10: one question, then a record of what changed. Never celebration.
+
+[TASK]
+Before any screen is built, confirm understanding. Then answer:
+
+1. Which screen is the clinical hinge of the product — the one whose failure makes every other screen irrelevant — and why?
+2. Where does the shared word first appear, where does it flow, and what happens on both ends if the user left it blank?
+3. At what exact moment does "nightmare" become "dream" — and what would it mean if that shift were announced rather than silent?
+4. Tier 1 is defined by retention, not complexity. Name the specific moment on each Tier 1 screen where the user decides whether to continue — and what the build must do at that moment.
+5. Describe what the user sees on Night 1, Night 4, and Night 10 — and what is specifically different about each.
+
+Do not begin building until confirmation is received and accepted.
+
+[CONSTRAINT]
+This prompt produces no code. Its only output is confirmed understanding. A build that begins on a misunderstanding produces screens that cannot talk to each other.`
+      },
+      review: {
+        name: 'Critical Review',
+        label: 'After all screens are complete',
+        text: `[ROLE 1 — U.S. Combat Veteran]
+You are no longer the engineer who built this. You are a U.S. combat veteran. It is 2am. A nightmare woke you. You reached for your phone because you needed to put the nightmare somewhere other than inside you — and this app was there. You have never used it before. You opened it because you were willing to try, and that willingness is fragile and will not survive being tested.
+
+Walk through every screen in sequence as this person. At each screen, answer:
+1. At what exact moment, if any, would you close the app — and why?
+2. Is there anything on this screen that implies the app wants something from you before it has earned it?
+3. Is there anything that reminds you that you are using an app when you should be somewhere else?
+
+Do not answer as the engineer defending decisions. Answer as the veteran encountering the product for the first time, in the dark, at 2am, after a nightmare. If a moment lands wrong, name it exactly — the element, the word, the interaction, the delay. Vague findings are not findings.
+
+[ROLE 2 — Survivor of Assault]
+You are now a survivor of assault. At each screen, answer the same three questions — and add a fourth:
+4. Is there anything on this screen that implies you are being observed, recorded, or that what you share here could be used in a way you didn't consent to?
+
+[THREE HIGHEST-RISK MOMENTS]
+Across the entire build, identify the three moments most likely to lose a user who was willing to be there. Not three screens — three moments.
+
+For each: name it exactly, name which persona it risks losing and why, name the threshold between staying and leaving.
+
+Rank by audience size first — a moment that loses both personas ranks above one that loses only one.
+
+[CONSTRAINT]
+"The copy feels off" is not a finding. "The word 'processing' in the Analyze transition implies the app is evaluating the recording" is a finding.
+
+Do not propose fixes. The engineer reviews findings and confirms which to address before any correction is made. A fix applied before findings are confirmed is a guess.`
+      }
+    };
+
+    var overlay = document.getElementById('drawer-overlay');
+    var drawerTitle = document.getElementById('drawer-title');
+    var drawerName = document.getElementById('drawer-name');
+    var drawerText = document.getElementById('drawer-prompt-text');
+    var closeBtn = document.getElementById('drawer-close');
+
+    function openDrawer(key) {
+      var p = PROMPTS[key];
+      if (!p) return;
+      drawerTitle.textContent = p.label;
+      drawerName.textContent = p.name;
+      drawerText.textContent = p.text;
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeDrawer() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeDrawer();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    // Wire up all read links
+    document.querySelectorAll('[data-prompt]').forEach(function(btn) {
+      btn.addEventListener('click', function() { openDrawer(btn.getAttribute('data-prompt')); });
+    });
+  })();
+  </script>
+
+</div>
+
+</body>
+</html>

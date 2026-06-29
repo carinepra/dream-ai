@@ -1,0 +1,3014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dream AI</title>
+
+<!-- Typography loaded before the skeleton renders. display=block keeps text
+     invisible until the correct face has loaded — the user never sees a wrong
+     typeface, which would break Vigil before the first screen appears. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=block" rel="stylesheet">
+
+<style>
+/* =====================================================================
+   DREAM AI — SKELETON
+   Foundation only. No screen content. Every value below is a token taken
+   from the Vigil design system (Foundation + Components references).
+   Nothing in the build hardcodes a value — it references a token.
+   ===================================================================== */
+
+:root {
+  /* ---- 01 · COLOR (four base tokens + ground stops) ----------------- */
+  --color-bg:            #0F0C0A;  /* Background — the ground, every screen   */
+  --color-surface:       #1A1512;  /* Surface — contained elements only       */
+  --color-accent:        #B65A3C;  /* Accent · ember — full weight exactly once */
+  --color-accent-bright: #C9764F;  /* Ember highlight, used only within gradients */
+  --color-text:          #EDE6DF;  /* Text — warm off-white, never pure white  */
+
+  /* Ground gradient stops — "warmth held in the ground from before the user
+     arrived." Not a background; the first thing the product does for them. */
+  --ground-1: #2c1810;
+  --ground-2: #1a110c;
+  --ground-3: #120d0a;
+  --ground-4: #0f0c0a;            /* == --color-bg */
+  --ground: radial-gradient(140% 90% at 50% 122%,
+              var(--ground-1) 0%, var(--ground-2) 20%,
+              var(--ground-3) 46%, var(--ground-4) 70%);
+
+  /* ---- Opacity ladder (derived from Text) -------------------------- */
+  --opacity-primary:   1;
+  --opacity-secondary: 0.64;       /* supporting copy that orients, not demands */
+  --opacity-ghost:     0.40;       /* skip, footer, X — findable, never competing */
+
+  --text-primary:   rgba(237,230,223,1);
+  --text-secondary: rgba(237,230,223,0.64);
+  --text-ghost:     rgba(237,230,223,0.40);
+
+  /* Persistent-element opacities, each named explicitly */
+  --opacity-x:      var(--opacity-ghost);   /* 0.40 — exit, every screen incl. Watch */
+  --opacity-footer: var(--opacity-ghost);   /* 0.40 — safety line, every screen */
+  --opacity-skip:   var(--opacity-ghost);   /* 0.40 — skip affordance */
+
+  /* ---- Borders (text/accent at low opacity — lift by warmth, not edge) */
+  --border-faint:  rgba(237,230,223,0.05);
+  --border-subtle: rgba(237,230,223,0.06);
+  --border-soft:   rgba(237,230,223,0.08);
+  --border-strong: rgba(237,230,223,0.12);
+  --border-ember-rest:   rgba(182,90,60,0.34); /* mic ring at rest */
+  --border-ember-active: rgba(182,90,60,0.40); /* mic ring active */
+
+  /* ---- 02 · TYPOGRAPHY --------------------------------------------- */
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif; /* human voice & the user's word */
+  --font-sans:  'IBM Plex Sans', system-ui, -apple-system, sans-serif; /* the quiet system */
+  --font-mono:  'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace; /* labels */
+
+  --weight-light:   300;  /* lightest screens (Rescript, Watch, Heal) */
+  --weight-regular: 400;  /* body, narration, the user's word */
+  --weight-medium:  500;  /* the heaviest moment — never Bold (700+) */
+
+  /* Type scale — size paired with line-height. Every size appears in the
+     Vigil references; screens choose from this scale, never off it. */
+  --fs-display: 40px; --lh-display: 1.2;   /* the user's word at Summary */
+  --fs-2xl:     30px; --lh-2xl: 1.18;      /* large headings / wordmark */
+  --fs-xl:      23px; --lh-xl: 1.5;        /* Watch narration line */
+  --fs-lg:      19px; --lh-lg: 1.6;        /* lead body */
+  --fs-md:      17px; --lh-md: 1.6;        /* body */
+  --fs-base:    15px; --lh-base: 1.62;     /* default reading */
+  --fs-sm:      14px; --lh-sm: 1.55;       /* secondary copy */
+  --fs-xs:      13px; --lh-xs: 1.55;       /* fine copy */
+  --fs-mono:    12px; --lh-mono: 1.4;      /* mono eyebrow labels */
+  --fs-footer:  11px; --lh-footer: 1.5;    /* safety footer — min readable */
+
+  --ls-tight:        -0.01em;   /* display & large headings */
+  --ls-snug:         -0.005em;
+  --ls-narration:     0.005em;  /* Watch narration */
+  --ls-wordmark:      0.02em;   /* "Dream AI" wordmark */
+  --ls-label:         0.22em;   /* mono eyebrow, uppercase */
+  --ls-label-tight:   0.08em;
+  --ls-label-tighter: 0.06em;
+
+  /* ---- 03 · SPACING (base 8) --------------------------------------- */
+  --space-base: 8px;
+  --space-1:  8px;   /* 1× tight internal padding            */
+  --space-2:  16px;  /* 2× default surface padding / rhythm   */
+  --space-3:  24px;  /* 3× separation between elements        */
+  --space-6:  48px;  /* 6× min tap target / section breathing */
+  --space-8:  64px;  /* 8× microphone tap target / air        */
+  --space-12: 96px;  /* 12× the vast quiet of Watch & Heal    */
+
+  --tap-min: 48px;   /* minimum tap target (6×)               */
+  --tap-mic: 64px;   /* microphone tap target (8×)            */
+
+  /* ---- Safe areas (given, not derived) — also respect device insets */
+  --safe-top:    max(59px, env(safe-area-inset-top));
+  --safe-bottom: max(34px, env(safe-area-inset-bottom));
+  /* Clearance every screen reserves so content never collides with the
+     persistent footer or the X. Screens pad to these from the start. */
+  --content-safe-top:    var(--safe-top);
+  --content-safe-bottom: calc(var(--safe-bottom) + var(--space-6));
+
+  /* ---- 04 · MOTION ------------------------------------------------- */
+  --duration-standard:  400ms;  /* minimum — below a flinch threshold */
+  --duration-reduced:   200ms;  /* prefers-reduced-motion crossfade   */
+  --duration-watch-cut:   0ms;  /* Watch entry — entered, not presented */
+  --duration-reveal:    600ms;  /* one-time boot reveal, gated on fonts-ready */
+  --ease-out: ease-out;         /* decelerates into stillness; ease-out only */
+
+  /* Active navigation duration. Globally swapped to reduced below. */
+  --nav-duration: var(--duration-standard);
+
+  /* ---- 05 · MICROPHONE PULSE (clinical spec — do not tune for feel) -
+     Continuous deceleration of the cycle PERIOD over the ramp window.
+     These are a clinical specification for nervous-system co-regulation,
+     not animation preferences. */
+  --mic-period-start:    1600ms;  /* faster at the start            */
+  --mic-period-end:      4500ms;  /* settles to ~4–5s per cycle     */
+  --mic-decel-duration: 60000ms;  /* deceleration ramp window (60s) */
+  --mic-scale-min:   1.00;
+  --mic-scale-max:   1.14;
+  --mic-opacity-min: 0.42;
+  --mic-opacity-max: 0.92;
+  --mic-ring-scale-extra:  0.34;  /* ring expands 1.00 → 1.34       */
+  --mic-ring-opacity-min:  0.05;
+  --mic-ring-opacity-range:0.28;
+  --mic-visual-size: 96px;        /* the ember ring (visual)        */
+  --mic-core-size:   72px;        /* the ember core (visual)        */
+}
+
+/* prefers-reduced-motion: swap the navigation duration globally, once,
+   via the cascade — no per-transition branching. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --nav-duration:    var(--duration-reduced);
+    --duration-reveal: var(--duration-reduced);
+  }
+}
+
+/* =====================================================================
+   RESET / GLOBAL
+   ===================================================================== */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  /* Center the viewport on desktop; fills the screen on a phone. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* =====================================================================
+   STEP 2 · MOBILE FRAME — a viewport, not a device.
+   No shadow, no radius, no border, no background. The frame disappears.
+   ===================================================================== */
+.frame {
+  position: relative;
+  width:  min(390px, 100vw);
+  height: min(844px, 100svh, 100vh);
+  overflow: hidden;
+  /* swipe gestures (e.g. Watch swipe-down) can be detected without the
+     browser hijacking them, while taps stay instant. */
+  touch-action: manipulation;
+  /* Held dark until fonts are ready, so the first painted frame is
+     guaranteed in Source Serif 4 — never a wrong-typeface flash. */
+  opacity: 0;
+}
+/* One-time boot reveal only — gated on fonts-ready (see script). The frame
+   never animates again; all inter-screen motion lives on .screen. */
+.frame.is-ready {
+  opacity: 1;
+  transition: opacity var(--duration-reveal) var(--ease-out);
+}
+
+/* =====================================================================
+   SCREEN LAYER — content owns its own background (the ground).
+   navigateTo() crossfades these; only content transitions.
+   ===================================================================== */
+.screens { position: absolute; inset: 0; z-index: 1; }
+
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--ground);
+  opacity: 0;
+  visibility: hidden;
+  /* fade only — never slide. ease-out only. */
+  transition: opacity var(--nav-duration) var(--ease-out),
+              visibility 0s linear var(--nav-duration);
+}
+.screen.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--nav-duration) var(--ease-out);
+}
+
+/* =====================================================================
+   STEP 3 · PERSISTENT ELEMENTS — declared once, inherited by every
+   screen, never re-rendered. They sit above the screen layer and never
+   participate in any transition.
+   ===================================================================== */
+
+/* Exit · X — top right, within the top safe area, 0.40, on EVERY screen
+   including Watch. Not a design element — a guarantee they can leave. */
+.x-exit {
+  position: absolute;
+  top:  var(--space-2);
+  right: var(--space-2);
+  width:  var(--tap-min);   /* 48px tap target (> 40px minimum) */
+  height: var(--tap-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: var(--opacity-x);
+  z-index: 5;
+  outline: none;              /* focus ring suppressed visually... */
+  -webkit-appearance: none;
+}
+.x-exit svg { display: block; width: 18px; height: 18px; pointer-events: none; }
+
+/* Safety footer — bottom, within the bottom safe area, every screen.
+   Fixed to the frame (not the document). Never blocks a tap target.
+   Readability fix: this was double-dimmed — text-ghost (0.40 alpha) AND a
+   0.40 element opacity compounded to ~0.16 effective (~1.5:1 contrast, well
+   under AAA). It now carries a single secondary tier (0.64), which clears
+   AAA (~7:1) on the ground while staying clearly subordinate to primary
+   copy. Quiet is held by its size and position, not by an unreadable alpha.
+   Hidden on Record and Watch: immersive screens where context copy competes
+   with the primary task (speaking the nightmare / watching the film). */
+.safety-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--safe-bottom);
+  padding: 0 var(--space-6);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: var(--fs-footer);
+  line-height: var(--lh-footer);
+  /* A footer-specific alpha, off the 1 / 0.64 / 0.40 ladder on purpose: the
+     secondary tier (0.64) lands at ~6.6:1 on the warm ground at this 11px
+     size — just under AAA. 0.72 clears 7:1 across every ground stop while
+     staying visibly below primary. Quiet comes from size and position. */
+  color: rgba(237, 230, 223, 0.72);
+  opacity: 1;                      /* no compounding (was --opacity-footer) */
+  z-index: 5;
+  pointer-events: none;       /* never intercepts a touch */
+  transition: opacity var(--nav-duration) var(--ease-out);
+}
+/* Record: the nightmare is the only thing happening. Watch: zero UI.
+   Both screens earn full immersion; informational copy has no role here. */
+.frame:has(#screen-record.is-active) .safety-footer,
+.frame:has(#screen-watch.is-active) .safety-footer {
+  opacity: 0;
+}
+
+/* Screen-reader / keyboard accessibility: visible focus suppressed per
+   Vigil, but a clear focus state still exists for keyboard users. */
+.x-exit:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* =====================================================================
+   BRAND · single ember dot + Dream·AI wordmark
+   The product's identity. Shown only where branding is welcome — never
+   announced during the experience. The single ember dot is a quiet ambient
+   mark (top-left, every screen except Watch); the wordmark speaks only on
+   the destination (Heal). Ember held at 0.90, never near the Summary word.
+   ===================================================================== */
+
+/* ---- Single ember dot. 28px container, 8px dot, centered. */
+.logo-icon { display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; }
+.logo-dot-ember { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto;
+  background: var(--color-accent); opacity: 0.90; }
+
+/* brand-corner removed */
+
+/* ---- Wordmark · Dream·AI — three parts run as one unit, no space between. */
+.wordmark { display: inline-flex; align-items: baseline; white-space: nowrap; }
+.wordmark-dream { font-family: var(--font-serif); font-weight: var(--weight-light); /*300*/
+  font-size: var(--fs-2xl); line-height: 1; letter-spacing: var(--ls-wordmark);
+  color: var(--text-primary); }
+/* the dot sits at the baseline — the bottom of the letter height, not centered */
+.wordmark-dot { width: 0.13em; height: 0.13em; border-radius: 50%;
+  background: var(--color-accent); opacity: 0.90;
+  font-size: var(--fs-2xl);                        /* em is relative to Dream's size */
+  align-self: baseline; }
+.wordmark-ai { font-family: var(--font-sans); font-weight: var(--weight-regular); /*400*/
+  font-size: calc(var(--fs-2xl) * 0.85);           /* ~85% of Dream */
+  line-height: 1; letter-spacing: var(--ls-wordmark);
+  color: var(--text-primary); opacity: 0.55; }
+
+/* Wordmark placement on Heal — top-center, within the safe area. Hidden on
+   the Transformation Summary so the user's word is the only color that speaks. */
+.heal-wordmark { position: absolute; top: calc(var(--safe-top) + var(--space-1));
+  left: 0; right: 0; display: flex; justify-content: center;
+  z-index: 4; pointer-events: none;
+  transition: opacity var(--nav-duration) var(--ease-out); }
+#screen-heal[data-heal-state="10s"] .heal-wordmark { opacity: 0; }
+
+/* Wordmark on Record — first-time entry only. Hidden during recording and done. */
+.rec-wordmark { position: absolute; top: calc(var(--safe-top) + var(--space-1));
+  left: 0; right: 0; display: flex; justify-content: center;
+  z-index: 4; pointer-events: none;
+  transition: opacity var(--nav-duration) var(--ease-out); }
+/* Hide wordmark once recording starts or after done */
+#screen-record[data-rec-state="recording"] .rec-wordmark,
+#screen-record[data-rec-state="done"] .rec-wordmark { opacity: 0; }
+/* Hide wordmark on returning user variant */
+#screen-record[data-rec-variant="returning"] .rec-wordmark { opacity: 0; }
+
+/* ---- Reminder confirmation (Night 1 only, "Set reminder" path) ------- */
+
+/* Shown after the user sets a reminder. Two elements: the fact of the
+   reminder (time, stated simply) and the guidance for tomorrow. No buttons,
+   no forward action — the X handles exit. The product holds quietly. */
+.screen.is-active[data-heal-state="1r"] .heal-1r {
+  opacity: 1; visibility: visible;
+  transition: opacity var(--nav-duration) var(--ease-out); }
+
+/* "Reminder set for 9:00 PM" — secondary opacity: acknowledgment, not
+   announcement. Serif light, matching the mechanism text register. */
+.heal-reminder-confirm { margin: 0 0 var(--space-6); max-width: 280px;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-base); line-height: var(--lh-base);
+  letter-spacing: var(--ls-snug); color: var(--text-secondary); }
+
+/* ---- Post-watch state — Nights 1 and 2–9 share this block.
+   Revealed after the reminder interaction (Night 1) or on returning from
+   Watch with a re-watch flag (Nights 2–9). Three elements in descending
+   visual weight: primary completion action, secondary rewatch option, and
+   a quiet guidance note. The hierarchy communicates without directing:
+   the primary button names what is already true (tonight is done), not
+   what the user must do. */
+.screen.is-active[data-heal-state="1-post"] .heal-post,
+.screen.is-active[data-heal-state="n-post"] .heal-post {
+  opacity: 1; visibility: visible;
+  transition: opacity var(--nav-duration) var(--ease-out); }
+
+/* "Come back tomorrow for Night N." — the quietest element on the screen.
+   Ghost opacity, small. Informational, not instructional. Space above
+   separates it from the actions so it registers as a separate thought. */
+.heal-tomorrow { margin: var(--space-8) 0 0; max-width: 260px;
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); line-height: var(--lh-sm);
+  letter-spacing: var(--ls-snug); color: var(--text-ghost); }
+
+/* =====================================================================
+   RECORD · Tier 1
+   Three states (idle · recording · done) driven by data-rec-state, and two
+   variants (first · returning) driven by data-rec-variant. Same layout for
+   both variants — the returning variant adds one element (the film), never
+   a new layout.
+   ===================================================================== */
+
+/* Progress dots — orientation only. Four authoring steps (Record → Rescript);
+   Watch and Heal are destinations, not steps. Current dot is the accent token
+   at REDUCED opacity — never full weight, which is reserved for the user's
+   word in the Summary. (See note: this resolves the accent-vs-discipline
+   conflict in the Record spec.) Only opacity/hue differ, never size. */
+.rec-dots { position: absolute; top: var(--space-3); left: 0; right: 0;
+  display: flex; justify-content: center; gap: var(--space-2); z-index: 4; }
+.rec-dot { width: 16px; height: 1px; border-radius: 0;
+  background: var(--color-text); opacity: 0.20; }
+.rec-dot.is-current { background: var(--color-accent); opacity: 0.35; }
+
+/* =====================================================================
+   SHARED · VOICE MIC + TYPE FIELD
+   One microphone component for every voice recording (Record and Deepen).
+   Visuals and states are identical everywhere; only placement differs (each
+   screen positions it in its own flow). State is driven by data-mic-state on
+   the button itself (idle · recording · done) so no screen owns the visuals.
+   The clinical pulse is the skeleton's named pulse; the fast-start ramp
+   applies to the first recording only (startMicPulse opts.settled). */
+.mic { position: relative; flex: 0 0 auto;
+  width: var(--mic-visual-size); height: var(--mic-visual-size);
+  min-width: var(--tap-mic); min-height: var(--tap-mic);
+  display: flex; align-items: center; justify-content: center;
+  border: 0; background: none; padding: 0; cursor: pointer; -webkit-appearance: none; }
+.mic-rest, .mic-ring, .mic-core, .mic-settled {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;
+  /* margin:auto centering so the JS pulse can write scale() without clobbering it */
+  pointer-events: none; border-radius: 50%; }
+.mic-ring, .mic-core, .mic-settled { display: none; }
+.mic-rest { width: var(--mic-visual-size); height: var(--mic-visual-size);
+  border: 1px solid var(--border-ember-rest);
+  background: radial-gradient(circle at 50% 50%,
+    rgba(201,118,79,0.16) 0%,   /* --color-accent-bright at 16%, gradient-only */
+    rgba(182,90,60,0.04)  55%,  /* --color-accent at 4% */
+    transparent 72%); }
+.mic-ring { width: var(--mic-visual-size); height: var(--mic-visual-size);
+  border: 1px solid var(--border-ember-active); opacity: 0; }
+.mic-core { width: var(--mic-core-size); height: var(--mic-core-size); opacity: 0;
+  background: radial-gradient(circle at 50% 50%,
+    var(--color-accent-bright) 0%,  /* gradient-only: #C9764F, never text/interactive */
+    var(--color-accent) 60%, transparent 74%); }
+.mic-settled { width: var(--space-6); height: var(--space-6); opacity: 0;
+  background: radial-gradient(circle at 50% 50%,
+    var(--color-accent) 0%, rgba(182,90,60,0.18) 70%, transparent 80%);
+  transition: opacity var(--duration-standard) var(--ease-out); }
+
+/* The microphone glyph (Phosphor, Regular) — so the tap target reads as
+   interactive. Ghost weight: present without competing with the ember. Fades
+   out once the ember takes over (recording) or settles (done). */
+.mic-icon { position: relative; z-index: 1; pointer-events: none;
+  width: 28px; height: 28px; color: var(--color-text); opacity: var(--opacity-ghost);
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.mic-icon svg { display: block; width: 100%; height: 100%; }
+
+.mic[data-mic-state="recording"] .mic-rest,
+.mic[data-mic-state="done"] .mic-rest { display: none; }
+.mic[data-mic-state="recording"] .mic-ring,
+.mic[data-mic-state="recording"] .mic-core { display: block; }
+.mic[data-mic-state="done"] .mic-settled { display: block; opacity: 0.82; }
+.mic[data-mic-state="recording"] .mic-icon,
+.mic[data-mic-state="done"] .mic-icon { opacity: 0; }
+
+/* Type-field — the "or type" alternative to speaking. Subordinate (a thin
+   line, not an ember), ghost placeholder, no autofocus (set in markup) so the
+   OS keyboard never ambushes a 2am user. Shared by Record and Deepen. */
+.type-field { margin-top: var(--space-6);
+  width: calc(var(--space-12) + var(--space-12));
+  display: flex; justify-content: center; }
+.type-input { width: 100%; min-height: var(--tap-min);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-base); color: var(--text-primary); text-align: center;
+  background: none; border: 0; border-bottom: 1px solid var(--border-strong);
+  padding: 0 var(--space-1); -webkit-appearance: none; outline: none; }
+.type-input::placeholder { color: var(--text-ghost); }
+.type-input:focus-visible { border-bottom-color: var(--border-ember-active); }
+
+/* Skip — one consistent exit on every screen that has one: bottom-right
+   corner, ghost, smaller than the primary action, so a 2am user never hunts
+   for it. Absolutely placed (every .screen and its centered containers are
+   inset:0) and lifted clear of the footer. */
+.skip { position: absolute;
+  right: var(--space-2);
+  bottom: calc(var(--safe-bottom) + var(--space-8));
+  min-height: var(--tap-min);
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 var(--space-2);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  z-index: 4; }
+.skip:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* A subtle chevron after every skip action — a directional hint that skip
+   still moves the user forward, aiding discoverability. Kept quieter than the
+   label itself (it inherits the ghost color, then softens further) so it never
+   competes with the primary action. Applies to the shared corner skip and the
+   Night-10 question skip alike. */
+.skip::after, .heal-10-skip::after {
+  content: "\203A";              /* › — a refined chevron, not a hard ">" */
+  margin-left: 0.35em;
+  font-size: 1.1em; line-height: 1;
+  opacity: 0.7;                  /* a step below the label; a hint, not a button */
+}
+
+/* ---- Record layout (flow) ---------------------------------------------
+   The head, mic, type-field, post-record action and (returning) film stack
+   and always clear the persistent footer. */
+.rec-stage { position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: calc(var(--content-safe-top) + 56px)
+           var(--space-6)
+           calc(var(--safe-bottom) + var(--space-8));
+  text-align: center; }
+
+/* Head — the presence line and, beneath it, the invitation. */
+.rec-head { display: flex; flex-direction: column; align-items: center;
+  gap: var(--space-2); margin-bottom: var(--space-6); }
+
+/* Presence line — serif, medium (the heaviest line; the arc decompresses from
+   here). Lightens to regular once received. */
+.rec-line { margin: 0; max-width: 318px;
+  font-family: var(--font-serif); font-weight: var(--weight-medium);
+  font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: var(--ls-snug);
+  color: var(--text-primary);
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.screen[data-rec-state="done"] .rec-line { font-weight: var(--weight-regular); }
+
+/* Invitation — smaller than the presence line, secondary opacity. Present only
+   at rest, while the user is deciding to begin; it recedes once they act. */
+.rec-subline { margin: 0; max-width: 300px;
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); line-height: var(--lh-sm); letter-spacing: var(--ls-snug);
+  color: var(--text-secondary);
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.screen[data-rec-state="recording"] .rec-subline,
+.screen[data-rec-state="done"] .rec-subline { opacity: 0; visibility: hidden; }
+
+/* On-device reassurance — same register as the safety footer (sans, footer
+   size, ghost). Appears once, quietly, below the presence line and above the
+   mic; it leaves the moment the user begins (recording or done) and never
+   returns. Not a modal, not a step. */
+.rec-ondevice { margin: var(--space-6) auto 0; max-width: 300px;
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-footer); line-height: var(--lh-footer); text-align: center;
+  letter-spacing: var(--ls-snug); color: var(--text-ghost);
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.screen[data-rec-state="recording"] .rec-ondevice,
+.screen[data-rec-state="done"] .rec-ondevice { opacity: 0; visibility: hidden; }
+
+/* Type-field within Record — shown at rest and when the user has typed; hidden
+   while recording or after a spoken nightmare. */
+.screen[data-rec-state="recording"] .type-field,
+.screen[data-rec-state="done"][data-rec-source="voice"] .type-field { visibility: hidden; }
+
+/* Post-recording — forward action and the quiet "again". Reserves its space
+   (visibility) so revealing it never shifts the layout. */
+.rec-after { display: flex; flex-direction: column; align-items: center;
+  margin-top: var(--space-3);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.screen[data-rec-state="done"] .rec-after { opacity: 1; visibility: visible; }
+.rec-continue { font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2); }
+.rec-again { margin-top: var(--space-3);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost); /* skip-level 0.40 */
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2); }
+
+/* Returning variant only — the film they already have, one tap away. Shown
+   only at rest; recognition does the work, no label. */
+.rec-film { display: none; margin-top: var(--space-6); position: relative;
+  width: calc(var(--space-12) + var(--space-6));
+  height: calc((var(--space-12) + var(--space-6)) * 9 / 16);
+  border-radius: 3px; overflow: hidden; border: 1px solid var(--border-soft);
+  background: linear-gradient(160deg, var(--ground-2), var(--ground-4));
+  opacity: 0.55; cursor: pointer; padding: 0; -webkit-appearance: none; }
+.rec-film::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(60% 80% at 50% 116%,
+    rgba(182,90,60,0.22) 0%, transparent 70%); }
+.rec-film-play { position: absolute; inset: 0; z-index: 1; color: var(--color-text);
+  display: flex; align-items: center; justify-content: center; }
+.screen[data-rec-variant="returning"][data-rec-state="idle"] .rec-film { display: block; }
+
+/* =====================================================================
+   ANALYZE · Tier 2
+   The product's first response. One state, no progressive reveal. A quiet
+   map of the sleep pattern — present on arrival, read at the user's pace or
+   not at all. Decompression from Record is carried by weight (the synthesis
+   is regular, not the medium of Record's presence line) and by air — never
+   by color or brightness. The progress dots reuse Record's component and
+   tokens exactly; nothing new is introduced here.
+   ===================================================================== */
+
+/* Content column — synthesis centered in the reading zone, the forward
+   action and skip beneath it. Padded clear of the dots (top) and the
+   persistent footer (bottom) from the start; nothing reflows, nothing
+   animates in. */
+.an { position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: calc(var(--content-safe-top) + var(--space-6))
+           var(--space-6) var(--content-safe-bottom); }
+
+/* The synthesis — one flowing block, never a list or labeled section.
+   Serif (a human voice paying attention), regular weight, left-aligned so
+   it reads as observation rather than performance. Full primary opacity:
+   it is the content, and must clear AAA contrast at 2am. */
+.an-synthesis { margin: 0; max-width: 318px; text-align: left;
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-md); line-height: var(--lh-md);
+  letter-spacing: var(--ls-snug); color: var(--text-primary); }
+
+/* Forward action — about what happens next for the user. Same tokens as
+   Record's Continue; no new type, no new motion. */
+.an-continue { margin-top: var(--space-8);
+  font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2); }
+
+/* Skip is the shared corner button (.skip). */
+.an-continue:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* =====================================================================
+   TRANSITION — the bridge into Rescript. One centered question, one
+   forward action. No dots, no skip, no input: the question is held, and
+   the user answers it by choosing on the next screen.
+   ===================================================================== */
+.tr { position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: calc(var(--content-safe-top) + var(--space-6))
+           var(--space-6) var(--content-safe-bottom);
+  text-align: center; }
+.tr-lead { margin: 0; max-width: 300px;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: var(--ls-snug);
+  color: var(--text-primary); }
+.tr-continue { margin-top: var(--space-8);
+  font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2); }
+.tr-continue:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* =====================================================================
+   DEEPEN · Tier 3
+   Two rounds, each its own screen. Round 1 (screen-deepen-1): the emotional
+   hotspot — Q1 then Q2. Round 2 (screen-deepen-2): sensory detail and a
+   safety anchor — Q3 then Q4. Between them, a dedicated separator screen
+   (screen-deepen-sep) holds the ember horizon for a breath — the register
+   shift made a transition, not an in-screen element.
+
+   Within a round, a sequential reveal: the active question carries the mic;
+   after it is answered or skipped, it rises to a smaller secondary line
+   above and the next question fades in below with the mic ready. Only the
+   active question has the mic. Skip is independent per question; a re-record
+   affordance sits one level below skip and routes back to Record.
+
+   Flow layout (not pinned) so the stack, mic, keyboard, forward action,
+   skip and re-record always clear the persistent footer. The microphone
+   reuses the skeleton's clinical pulse; no new keyframe is declared.
+   Progress reflects the six-step arc (Deepen = third authoring step) on
+   both round screens, never position within the four questions.
+   ===================================================================== */
+.dp { position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: calc(var(--content-safe-top) + var(--space-3))
+           var(--space-6)
+           calc(var(--safe-bottom) + var(--space-8));   /* clears the footer */
+  text-align: center; }
+
+/* The question stack — secondary recap (rises in at step 2) above the
+   active question. */
+.dp-stack { display: flex; flex-direction: column; align-items: center;
+  gap: var(--space-3); margin-bottom: var(--space-3); }
+
+/* Secondary recap of the just-answered question — small, ghost. It slides
+   up into place as the next question appears (the user-requested reveal):
+   a gentle vertical move + fade, ease-out, never horizontal. */
+.dp-secondary { margin: 0; max-width: 300px;
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); line-height: var(--lh-sm); letter-spacing: var(--ls-snug);
+  color: var(--text-ghost);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity var(--nav-duration) var(--ease-out),
+              transform var(--nav-duration) var(--ease-out); }
+.screen[data-step="2"] .dp-secondary { opacity: var(--opacity-ghost); transform: translateY(0); }
+
+/* The active question — serif (the asker's voice), regular weight (a step
+   lighter than Record's medium line; the arc decompresses by weight).
+   Crossfaded on step change. */
+.dp-active { margin: 0; max-width: 318px;
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: var(--ls-snug);
+  color: var(--text-primary);
+  transition: opacity var(--nav-duration) var(--ease-out); }
+
+/* Microphone & type-field are the shared components (see SHARED above). Deepen
+   only specifies when the type-field recedes: while recording, or after a
+   spoken answer. */
+.screen[data-dp-state="recording"] .type-field,
+.screen[data-dp-state="answered"][data-dp-source="voice"] .type-field { visibility: hidden; }
+
+/* Forward action — appears only once an answer exists; it is just the means
+   to proceed with what they gave, never a reward for answering. Reserves
+   its space (visibility) so revealing it never shifts skip or re-record. */
+.dp-continue { margin-top: var(--space-3);
+  font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.screen[data-dp-state="answered"] .dp-continue { opacity: 1; visibility: visible; }
+.screen[data-dp-state="answered"] .dp-again { display: block; }
+.screen[data-dp-state="recording"] .dp-again { display: none; }
+
+/* Q2 is text-only: mic, ring, and re-record are suppressed so no voice
+   affordance appears. The type field expands naturally into the freed space. */
+.screen[data-text-only] .mic,
+.screen[data-text-only] .dp-again { display: none !important; }
+
+/* Re-record — same ghost treatment as Record's "again"; routes back to Record
+   so the user can start over and re-speak. (Skip is the shared corner button.) */
+/* again only visible after an answer exists */
+.dp-again { display: none; margin-top: var(--space-3);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2); }
+.dp-continue:focus-visible, .dp-again:focus-visible {
+  outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* The separator screen — a held breath between rounds. The ember horizon
+   is first light at 4am: it grows and warms on arrival, holds, then the
+   screen crossfades to Round 2. No text, no label, no progress dots — a
+   shift in register, not a step. */
+.dp-sep { position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; }
+.dp-sep .dp-horizon { width: var(--space-6); height: 1px; border-radius: 1px;
+  background: linear-gradient(90deg, transparent 0%,
+    rgba(182,90,60,0.40) 50%, transparent 100%);  /* --color-accent at 40% */
+  opacity: 0; transform: scaleX(0.4);
+  transition: opacity var(--duration-standard) var(--ease-out),
+              transform var(--duration-standard) var(--ease-out); }
+.dp-sep .dp-horizon.is-lit { opacity: 1; transform: scaleX(1); }
+
+/* Reduced motion: the reveal and the separator fade only — no vertical or
+   scale movement. */
+@media (prefers-reduced-motion: reduce) {
+  .dp-secondary { transform: none; }
+  .screen[data-step="2"] .dp-secondary { transform: none; }
+  .dp-sep .dp-horizon { transform: none; }
+  .dp-sep .dp-horizon.is-lit { transform: none; }
+}
+
+/* =====================================================================
+   RESCRIPT · Tier 1 — the pivot (Agency)
+   Two sequential states on one screen, driven by data-rs-state:
+   "options" (three exits, one suggested by POSITION + one line of copy) and
+   "word" (one editable sentence whose blank holds the user's word). The word
+   is the single piece that is entirely the user's; it is keyboard-only here.
+   Authoring is a different act than recording: Record/Deepen retrieve what
+   already happened (speaking fits); Rescript names something new (writing
+   fits) — and writing is the only way to capture the word verbatim, on-device,
+   with no external transcription call. The arc lightens further: prominent
+   type is --weight-light. "dream" from here on; "nightmare" never appears.
+   ===================================================================== */
+.rs-options, .rs-word { position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: calc(var(--content-safe-top) + var(--space-3))
+           var(--space-6)
+           calc(var(--safe-bottom) + var(--space-8));
+  text-align: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--nav-duration) var(--ease-out),
+              visibility 0s linear var(--nav-duration); }
+/* Gate the shown state on the screen being ACTIVE. Without .is-active, a child
+   set to visibility:visible re-shows itself even while its ancestor screen is
+   visibility:hidden — and since the inactive screen is only opacity:0 (which
+   does not disable hit-testing), this full-frame layer would overlay whatever
+   screen IS active and swallow its taps. */
+.screen.is-active[data-rs-state="options"] .rs-options,
+.screen.is-active[data-rs-state="word"] .rs-word {
+  opacity: 1; visibility: visible;
+  transition: opacity var(--nav-duration) var(--ease-out); }
+
+/* Lead — a quiet orienting line; the agency is the user's. */
+.rs-lead { margin: 0 0 var(--space-6); max-width: 300px;
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-md); line-height: var(--lh-md); letter-spacing: var(--ls-snug);
+  color: var(--text-secondary); }
+
+/* The three exits — equal in every visual respect. Only POSITION (and the one
+   line above the middle) marks the suggestion. */
+.rs-options-list { display: flex; flex-direction: column; align-items: stretch;
+  gap: var(--space-2); width: 100%; max-width: 330px; }
+.rs-option { display: block; width: 100%; text-align: center; min-height: var(--tap-min);
+  background: none; border: 1px solid var(--border-soft); border-radius: 6px;
+  cursor: pointer; -webkit-appearance: none;
+  padding: var(--space-2); }
+.rs-option-name { display: block; margin: 0;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: var(--ls-snug);
+  color: var(--text-primary); }
+.rs-option-desc { display: block; margin: var(--space-1) 0 0;
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); line-height: var(--lh-sm);
+  color: var(--text-secondary); }
+.rs-option:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 2px; }
+
+/* The suggestion — marked by position plus this single line, now set off to
+   the RIGHT of the card and in the existing amber, so it reads as a quiet
+   contextual note ("based on what you shared") rather than a recommendation
+   badge. Still no pill, border, background, or icon — just a small annotation,
+   smaller than mono and tucked to the side. Kept intentionally fine: it
+   annotates the hierarchy without competing for attention. */
+.rs-eyebrow { display: block; margin: 0 0 var(--space-1);
+  text-align: right;                            /* off to the side, not a banner */
+  font-family: var(--font-mono); font-weight: var(--weight-regular);
+  font-size: calc(var(--fs-mono) - 2px); line-height: var(--lh-mono); /* 10px — quieter than labels */
+  letter-spacing: var(--ls-label-tighter);      /* 0.06em — tighter, less prominent */
+  color: var(--text-ghost); }                   /* ghost, like skip — position is the only indicator; no color emphasis */
+
+/* Skip (State 1 only) — selects the suggested option; never a dead end. It is
+   the shared corner button (.skip), inside .rs-options so it shows only in
+   State 1. */
+
+/* State 2 — the sentence frame (the product's contribution) with the blank
+   (the user's word) inline. Serif, light. */
+.rs-sentence { margin: 0; max-width: 318px;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-lg); line-height: var(--lh-lg); letter-spacing: var(--ls-snug);
+  color: var(--text-primary); }
+
+/* The blank is a keyboard-only inline field (no mic on this screen). It blends
+   into the sentence and the user writes their word directly into it. No
+   autofocus — they read the sentence and tap the blank at their own pace. */
+/* The blank carries the only accent color on this screen besides the progress
+   dot — it draws the eye to where the user acts, without instruction. */
+.rs-blank-input { font: inherit; color: var(--text-primary); vertical-align: baseline;
+  background: none; border: 0; border-bottom: 1px solid var(--color-accent);
+  text-align: center; padding: 0 var(--space-1); min-width: 72px;
+  -webkit-appearance: none; outline: none; }
+.rs-blank-input::placeholder { color: var(--text-ghost); }
+.rs-blank-input:focus-visible { border-bottom-color: var(--color-accent); }
+
+/* Forward action + a non-alarming flag if the word fails to save. The flag is
+   about the user's word, not the technical failure; it is secondary, not red. */
+.rs-back { position: absolute; bottom: calc(var(--safe-bottom) + var(--space-6));
+  left: var(--space-4); min-height: var(--tap-min);
+  display: inline-flex; align-items: center;
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  z-index: 4; }
+.rs-back:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+.rs-continue { margin-top: var(--space-8);
+  font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2); }
+.rs-continue:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+.rs-flag { margin: var(--space-3) 0 0; max-width: 300px;
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); line-height: var(--lh-sm); color: var(--text-secondary);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--duration-standard) var(--ease-out); }
+.rs-flag.is-shown { opacity: 1; visibility: visible; }
+
+/* =====================================================================
+   WATCH · Tier 1 — the hero (Relief / arrival)
+   No progress dots: their absence signals the user is no longer moving
+   through a sequence — they are somewhere. Pure black, not the ground.
+   Entry is a CUT (--duration-watch-cut). Zero UI during playback beyond
+   the persistent X; the down arrow appears only after narration ends.
+   Particles (Canvas) and ambient (Web Audio) live in JS — no libraries,
+   no files. "dream" only; "nightmare" never appears.
+   ===================================================================== */
+#screen-watch { background: #000;
+  transition: opacity var(--duration-watch-cut) var(--ease-out),
+              visibility 0s linear var(--duration-watch-cut); }
+#screen-watch.is-active {
+  transition: opacity var(--duration-watch-cut) var(--ease-out); }
+
+/* The particle world — fades in softly at Moment 2, remains throughout. */
+.watch-canvas { position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; z-index: 1; pointer-events: none;
+  opacity: 0; transition: opacity 1500ms var(--ease-out); }
+.watch-canvas.is-on { opacity: 1; }
+
+/* Heal breath canvas — separate from Watch; same warm particles but
+   lower opacity and sparser. Starts with breath entry on Nights 2–9,
+   persists until the user navigates away. z-index 0 = behind all content. */
+.heal-breath-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; z-index: 0; pointer-events: none;
+  opacity: 0; transition: opacity 800ms var(--ease-out);
+}
+.heal-breath-canvas.is-on { opacity: 1; }
+
+/* Moment 1 — the user's word, large, alone, centered on pure black. */
+.watch-word { position: absolute; left: 0; right: 0; top: 50%;
+  transform: translateY(-50%); margin: 0; padding: 0 var(--space-6);
+  text-align: center; z-index: 2;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--ls-tight);
+  color: var(--text-primary);
+  opacity: 0; transition: opacity 1000ms var(--ease-out); }
+.watch-word.is-on { opacity: 1; }
+
+/* Narration line — centered, serif light; JS controls each fade in/out.
+   The user's word is woven into the arrival line as plain text, unemphasized. */
+.watch-line { position: absolute; left: 0; right: 0; top: 50%;
+  transform: translateY(-50%); margin: 0; padding: 0 var(--space-6);
+  text-align: center; z-index: 2;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-xl); line-height: var(--lh-xl); letter-spacing: var(--ls-narration);
+  color: var(--text-primary); opacity: 0; }
+
+/* Continue — text affordance, ghost opacity, centered, one slow fade-in. */
+.watch-arrow { position: absolute; left: 0; right: 0;
+  bottom: calc(var(--safe-bottom) + var(--space-8)); margin: 0 auto;
+  min-height: var(--tap-min);
+  display: flex; align-items: center; justify-content: center; z-index: 3;
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  font-family: var(--font-sans); font-size: var(--fs-sm); font-weight: var(--weight-regular);
+  color: var(--text-ghost);
+  opacity: 0; pointer-events: none;
+  transition: opacity 1500ms var(--ease-out); }
+.watch-arrow.is-on { opacity: 1; pointer-events: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-canvas, .watch-word, .watch-arrow { transition-duration: var(--duration-reduced); }
+}
+
+/* ---- SCAFFOLD ONLY — placeholder transition targets, replaced by their
+   own screen prompts (Analyze, Watch). ----- */
+.scaffold-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: var(--fs-mono);
+  letter-spacing: var(--ls-label); text-transform: uppercase;
+  color: var(--text-ghost);
+}
+
+/* =====================================================================
+   HEAL · Tier 1 (Night 1, Night 10) / Tier 3 (Nights 2–9)
+   Three fully distinct states, no shared layout between them.
+   No progress indicator on any night. No streak. No congratulation.
+   data-heal-state: "1" | "n" | "10q" | "10s"
+   ===================================================================== */
+
+/* All heal bodies share the same centered column — each is independently
+   hidden, shown only when its state is active AND the screen is active.
+   The is-active gate prevents visibility:visible from bleeding onto the
+   inactive screen layer and swallowing taps on whatever screen IS shown. */
+.heal-body {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: calc(var(--content-safe-top) + var(--space-3))
+           var(--space-6)
+           calc(var(--safe-bottom) + var(--space-8));
+  text-align: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--nav-duration) var(--ease-out),
+              visibility 0s linear var(--nav-duration);
+}
+.screen.is-active[data-heal-state="1"]   .heal-n1,
+.screen.is-active[data-heal-state="n"]   .heal-nn,
+.screen.is-active[data-heal-state="10q"] .heal-10q,
+.screen.is-active[data-heal-state="10s"] .heal-10s {
+  opacity: 1; visibility: visible;
+  transition: opacity var(--nav-duration) var(--ease-out);
+}
+
+/* ---- Night 1 -------------------------------------------------------- */
+
+/* Two mechanism sentences. Serif light — arc has decompressed from the
+   medium weight of Record. Plain language: what the brain does, nothing more. */
+.heal-mechanism {
+  max-width: 300px; margin: 0 0 var(--space-8);
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-md); line-height: var(--lh-md);
+  letter-spacing: var(--ls-snug); color: var(--text-primary);
+}
+
+/* Reminder section — the only ask in the product. Fades out after interaction
+   and never returns. The mechanism text stays visible; the ask disappears. */
+.heal-reminder-section {
+  display: flex; flex-direction: column; align-items: center;
+  transition: opacity var(--duration-standard) var(--ease-out);
+}
+.heal-n1.is-done .heal-reminder-section {
+  opacity: 0; pointer-events: none;
+}
+
+.heal-reminder-q {
+  max-width: 280px; margin: 0 0 var(--space-3);
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-base); line-height: var(--lh-base);
+  letter-spacing: var(--ls-snug); color: var(--text-secondary);
+}
+
+/* Native time picker — no custom UI. color-scheme:dark gives the OS picker
+   the correct palette on dark interfaces without any wrapper. */
+.heal-time-input {
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; border-bottom: 1px solid var(--border-strong);
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--tap-min); min-width: 120px;
+  -webkit-appearance: none; outline: none;
+  color-scheme: dark; margin-bottom: var(--space-3);
+}
+.heal-time-input:focus-visible { border-bottom-color: var(--border-ember-active); }
+
+/* Primary action — shared by Night 1, Nights 2–9, Night 10q, Summary */
+.heal-btn {
+  font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--text-primary);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2);
+  transition: opacity var(--duration-standard) var(--ease-out);
+}
+.heal-btn:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* Ghost secondary action — "not now", no label implying failure or absence */
+.heal-ghost-btn {
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2);
+  margin-top: var(--space-1);
+}
+.heal-ghost-btn:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* ---- Nights 2–9 ----------------------------------------------------- */
+
+/* Position marker: where they are in the ritual. Not a progress bar.
+   Not a badge. Small, ghost — it orients without demanding acknowledgment. */
+.heal-night-marker {
+  margin: 0 0 var(--space-6);
+  font-family: var(--font-mono); font-weight: var(--weight-regular);
+  font-size: var(--fs-mono); letter-spacing: var(--ls-label-tight);
+  color: var(--text-ghost);
+}
+
+/* One anchoring sentence. Secondary opacity — it holds the user in the
+   ritual without pulling toward the film or away from where they came. */
+.heal-anchor {
+  max-width: 280px; margin: 0 0 var(--space-8);
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-base); line-height: var(--lh-base);
+  letter-spacing: var(--ls-snug); color: var(--text-secondary);
+}
+
+/* ---- Night 10 question ----------------------------------------------- */
+
+/* The one question that earns the Summary. Larger than body; lighter than
+   the heavy screens. The user's arrived at something. */
+.heal-10-question {
+  max-width: 280px; margin: 0 0 var(--space-6);
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-lg); line-height: var(--lh-lg);
+  letter-spacing: var(--ls-snug); color: var(--text-primary);
+}
+
+/* Free-text answer — centered, ghost placeholder, no autofocus */
+.heal-10-input {
+  width: 100%; max-width: 300px; margin-bottom: var(--space-6);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-base); color: var(--text-primary);
+  background: none; border: 0; border-bottom: 1px solid var(--border-strong);
+  padding: var(--space-1); min-height: var(--tap-min);
+  text-align: center; -webkit-appearance: none; outline: none;
+}
+.heal-10-input::placeholder { color: var(--text-ghost); }
+.heal-10-input:focus-visible { border-bottom-color: var(--border-ember-active); }
+
+/* Inline skip for Night 10 question — not the corner .skip; lives in flow */
+.heal-10-skip {
+  margin-top: var(--space-2);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2);
+}
+.heal-10-skip:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+
+/* ---- Night 10 Transformation Summary --------------------------------- */
+
+/* Top layer — what they carried in. Ghost opacity, smaller than the center.
+   Intentionally quiet: the weight should feel past, not present. */
+.heal-summary-carried {
+  margin: 0 0 var(--space-5); max-width: 300px;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-base); line-height: var(--lh-base);
+  letter-spacing: var(--ls-snug);
+  color: var(--text-ghost);
+  word-break: break-word;
+}
+
+/* Center — what's different now. The user's Night 10 answer verbatim.
+   Full accent weight: the product has been saving this color for this moment. */
+.heal-summary-answer {
+  margin: 0 0 var(--space-6); max-width: 318px;
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-display); line-height: var(--lh-display);
+  letter-spacing: var(--ls-tight);
+  color: var(--color-accent);
+  word-break: break-word;
+}
+/* Skipped placeholder reads at ghost opacity — same size, no emphasis. */
+.heal-summary-answer.is-placeholder {
+  color: var(--text-ghost);
+}
+
+/* One closing line below center. */
+.heal-summary-lines {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+.heal-summary-line {
+  margin: 0; max-width: 280px;
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-base); line-height: var(--lh-base);
+  letter-spacing: var(--ls-snug); color: var(--text-secondary);
+}
+
+/* ---- Closing animation (Night 10 only) ------------------------------
+   Pure black overlay; appears after "Carry it." is tapped. The word and
+   farewell line both sit absolutely centered within it and are animated
+   independently via inline transitions in JS. The overlay itself fades in
+   over 600ms (concurrent with the heal-10s fade-out), so the transition
+   reads as "content fades to black" not a hard cut.
+   z-index 4: same level as .heal-confirm (they can never co-exist). */
+.heal-close {
+  position: absolute; inset: 0; z-index: 4;
+  display: flex; align-items: center; justify-content: center;
+  background: #000;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 800ms ease-out, visibility 0s linear 800ms;
+}
+.heal-close.is-in {
+  opacity: 1; visibility: visible; pointer-events: none;
+  transition: opacity 800ms ease-out;
+}
+/* Word and line are absolutely centered within the black overlay;
+   they never appear simultaneously so no vertical stacking needed. */
+.heal-close-word,
+.heal-close-line {
+  position: absolute; left: 0; right: 0;
+  top: 50%; transform: translateY(-50%);
+  padding: 0 var(--space-6); margin: 0;
+  text-align: center; word-break: break-word;
+  opacity: 0;
+}
+.heal-close-word {
+  font-family: var(--font-serif); font-weight: var(--weight-regular);
+  font-size: var(--fs-display); line-height: var(--lh-display);
+  letter-spacing: var(--ls-tight); color: var(--color-accent);
+}
+.heal-close-line {
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-base); line-height: var(--lh-base);
+  color: var(--text-ghost);
+}
+
+/* ---- Delete · start over ---------------------------------------------
+   Accessible but never prominent: one ghost line at the bottom of Heal,
+   above the footer. Hidden on the Summary (10s) so the user's word stays
+   alone. Tapping opens a single confirmation overlay — the only modal in
+   the product, justified because the action is destructive and final. */
+.heal-delete {
+  position: absolute; left: 0; right: 0;
+  bottom: calc(var(--safe-bottom) + var(--space-6) + 24px);
+  margin: 0 auto; min-height: var(--tap-min);
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 var(--space-2);
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-color: rgba(237,230,223,0.20);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  z-index: 4; transition: opacity var(--nav-duration) var(--ease-out);
+}
+.heal-delete:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+#screen-heal[data-heal-state="10s"] .heal-delete { opacity: 0; pointer-events: none; }
+
+/* Confirmation overlay — z-index 4 keeps it below the persistent X (5), so
+   the exit guarantee is never covered. Backdrop dims Heal; the dialog is
+   centered. "Delete" carries the accent (the one place destructive intent
+   earns it); "Keep it" dismisses, ghost. */
+.heal-confirm {
+  position: absolute; inset: 0; z-index: 4;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--space-6);
+  background: rgba(15, 12, 10, 0.88);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--nav-duration) var(--ease-out),
+              visibility 0s linear var(--nav-duration);
+}
+.heal-confirm.is-shown {
+  opacity: 1; visibility: visible;
+  transition: opacity var(--nav-duration) var(--ease-out);
+}
+.heal-confirm-box { max-width: 300px; text-align: center; }
+.heal-confirm-text {
+  margin: 0 0 var(--space-6);
+  font-family: var(--font-serif); font-weight: var(--weight-light);
+  font-size: var(--fs-md); line-height: var(--lh-md);
+  letter-spacing: var(--ls-snug); color: var(--text-primary);
+}
+.heal-confirm-actions { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); }
+.heal-confirm-delete {
+  font-family: var(--font-sans); font-weight: var(--weight-medium);
+  font-size: var(--fs-md); color: var(--color-accent);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2);
+}
+.heal-confirm-keep {
+  font-family: var(--font-sans); font-weight: var(--weight-regular);
+  font-size: var(--fs-sm); color: var(--text-ghost);
+  background: none; border: 0; cursor: pointer; -webkit-appearance: none;
+  min-height: var(--tap-min); padding: 0 var(--space-2);
+}
+.heal-confirm-delete:focus-visible,
+.heal-confirm-keep:focus-visible { outline: 1px solid var(--text-ghost); outline-offset: 4px; }
+</style>
+</head>
+<body>
+
+  <div class="frame" id="frame">
+
+    <!-- Screen layer: real screens are appended here by screen prompts. -->
+    <div class="screens" id="screens">
+
+      <!-- ============== RECORD · Tier 1 ============== -->
+      <section class="screen" id="screen-record"
+               data-rec-state="idle"
+               data-line-idle="Some nights are harder than others.">
+
+        <!-- Wordmark — first-time entry only. Hidden on recording/done/returning. -->
+        <div class="rec-wordmark">
+          <span class="wordmark" role="img" aria-label="Dream AI">
+            <span class="wordmark-dream" aria-hidden="true">Dream</span><span class="wordmark-dot" aria-hidden="true"></span><span class="wordmark-ai" aria-hidden="true">AI</span>
+          </span>
+        </div>
+
+        <!-- orientation only — no numbers, no percentage -->
+        <div class="rec-dots" aria-hidden="true">
+          <span class="rec-dot is-current"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+        </div>
+
+        <div class="rec-stage">
+          <div class="rec-head">
+            <p class="rec-line" id="rec-line" aria-live="polite">Some nights are harder than others.</p>
+            <p class="rec-subline">Is there a nightmare you'd like to bring here?</p>
+          </div>
+
+          <button class="mic" id="rec-mic" type="button" aria-label="Record" data-mic-state="idle">
+            <span class="mic-rest" aria-hidden="true"></span>
+            <span class="mic-ring" aria-hidden="true"></span>
+            <span class="mic-core" aria-hidden="true"></span>
+            <span class="mic-settled" aria-hidden="true"></span>
+            <span class="mic-icon" aria-hidden="true">
+              <svg viewBox="0 0 256 256" fill="currentColor"><path d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0ZM208,128a8,8,0,0,0-16,0,64,64,0,0,1-128,0,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V232a8,8,0,0,0,16,0V207.6A80.11,80.11,0,0,0,208,128Z"></path></svg>
+            </span>
+          </button>
+
+          <!-- "or type" — same shared treatment as Deepen; no autofocus -->
+          <div class="type-field">
+            <input class="type-input" id="rec-input" type="text" inputmode="text"
+                   autocomplete="off" autocorrect="off" spellcheck="false"
+                   aria-label="Type your nightmare" placeholder="or type">
+          </div>
+
+          <p class="rec-ondevice">Your nightmare stays on this device. You can delete it anytime.</p>
+
+          <!-- post-recording -->
+          <div class="rec-after">
+            <button class="rec-continue" id="rec-continue" type="button">Continue →</button>
+            <button class="rec-again" id="rec-again" type="button">again ↺</button>
+          </div>
+
+          <!-- returning variant only — your existing film, one tap -->
+          <button class="rec-film" id="rec-film" type="button" aria-label="Watch your dream">
+            <span class="rec-film-play" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M8 6.5 L16 11 L8 15.5 Z" stroke="currentColor" stroke-width="1.1"
+                      stroke-linejoin="round" opacity="0.6"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============== ANALYZE · Tier 2 ============== -->
+      <section class="screen" id="screen-analyze">
+
+        <!-- orientation only — Analyze is the second authoring step -->
+        <div class="rec-dots" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span class="rec-dot is-current"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+        </div>
+
+        <div class="an">
+          <!-- The synthesis. One flowing block in the sleep-pattern register:
+               what recurs, where the intensity peaks, how it tends to end.
+               No emotion the user didn't name, no interpretation, no claim
+               about the person. Placeholder content — the AI generates this
+               from the recording; the structure and register are real.
+               Present on arrival: no word-by-word or line-by-line reveal. -->
+          <p class="an-synthesis">
+            The nightmare returns to the same place — a corridor that keeps
+            going, doors that don't open the way they should. The figures
+            change from one night to the next, but the setting holds. It builds
+            toward the moment of confrontation, and that is where the intensity
+            peaks. It tends to end there, before anything resolves — waking
+            comes at the point of most pressure, not after it.
+          </p>
+
+          <button class="an-continue" id="an-continue" type="button">Continue →</button>
+          <button class="skip" id="an-skip" type="button">skip</button>
+        </div>
+      </section>
+
+      <!-- ============== DEEPEN · Tier 3 ============== -->
+      <!-- Two rounds, each its own screen, wired by one shared controller
+           (initRound). Within a round: data-step (1·2) selects which question
+           is active; data-dp-state (idle·recording·answered) drives the input.
+           Question copy lives in JS and is written into .dp-active/.dp-secondary
+           on init and on reveal. -->
+
+      <!-- Round 1 — emotional hotspot: Q1 (peak moment) then Q2 (its name) -->
+      <section class="screen" id="screen-deepen-1" data-step="1" data-dp-state="idle">
+        <!-- orientation only — Deepen is the third authoring step; fixed for
+             both rounds, never "2 of 4". -->
+        <div class="rec-dots" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot is-current"></span>
+          <span class="rec-dot"></span>
+        </div>
+        <!-- back to Q1 — only visible at step 2 -->
+        <button class="dp-back" id="dp-back-1" type="button" style="position: absolute; bottom: calc(var(--safe-bottom) + var(--space-6)); left: var(--space-4); min-height: 48px; display: none; align-items: center; font-family: var(--font-sans); font-size: 14px; color: rgba(237,230,223,0.40); background: none; border: 0; cursor: pointer; z-index: 4;">← back</button>
+
+        <div class="dp">
+          <div class="dp-stack">
+            <p class="dp-secondary" aria-hidden="true"></p>
+            <p class="dp-active" aria-live="polite"></p>
+          </div>
+
+          <button class="mic" type="button" aria-label="Answer by voice" data-mic-state="idle">
+            <span class="mic-rest" aria-hidden="true"></span>
+            <span class="mic-ring" aria-hidden="true"></span>
+            <span class="mic-core" aria-hidden="true"></span>
+            <span class="mic-settled" aria-hidden="true"></span>
+            <span class="mic-icon" aria-hidden="true">
+              <svg viewBox="0 0 256 256" fill="currentColor"><path d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0ZM208,128a8,8,0,0,0-16,0,64,64,0,0,1-128,0,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V232a8,8,0,0,0,16,0V207.6A80.11,80.11,0,0,0,208,128Z"></path></svg>
+            </span>
+          </button>
+
+          <div class="type-field">
+            <input class="type-input" type="text" inputmode="text"
+                   autocomplete="off" autocorrect="off" spellcheck="false"
+                   aria-label="Type your answer" placeholder="or type">
+          </div>
+          <button class="dp-continue" type="button">Continue →</button>
+          <button class="skip" type="button">skip</button>
+          <button class="dp-again" type="button">again ↺</button>
+        </div>
+      </section>
+
+      <!-- Separator — a held breath; the register shift as a transition -->
+      <section class="screen" id="screen-deepen-sep">
+        <div class="dp-sep"><span class="dp-horizon" aria-hidden="true"></span></div>
+      </section>
+
+      <!-- Round 2 — a single sensory detail: Q3 only (Q4 removed) -->
+      <section class="screen" id="screen-deepen-2" data-step="1" data-dp-state="idle">
+        <div class="rec-dots" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot is-current"></span>
+          <span class="rec-dot"></span>
+        </div>
+
+        <div class="dp">
+          <div class="dp-stack">
+            <p class="dp-secondary" aria-hidden="true"></p>
+            <p class="dp-active" aria-live="polite"></p>
+          </div>
+
+          <button class="mic" type="button" aria-label="Answer by voice" data-mic-state="idle">
+            <span class="mic-rest" aria-hidden="true"></span>
+            <span class="mic-ring" aria-hidden="true"></span>
+            <span class="mic-core" aria-hidden="true"></span>
+            <span class="mic-settled" aria-hidden="true"></span>
+            <span class="mic-icon" aria-hidden="true">
+              <svg viewBox="0 0 256 256" fill="currentColor"><path d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0ZM208,128a8,8,0,0,0-16,0,64,64,0,0,1-128,0,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V232a8,8,0,0,0,16,0V207.6A80.11,80.11,0,0,0,208,128Z"></path></svg>
+            </span>
+          </button>
+
+          <div class="type-field">
+            <input class="type-input" type="text" inputmode="text"
+                   autocomplete="off" autocorrect="off" spellcheck="false"
+                   aria-label="Type your answer" placeholder="or type">
+          </div>
+          <button class="dp-continue" type="button">Continue →</button>
+          <button class="skip" type="button">skip</button>
+          <button class="dp-again" type="button">again ↺</button>
+        </div>
+      </section>
+
+      <!-- ============== TRANSITION — before Rescript ============== -->
+      <!-- One question, one forward action. No progress dots, no step
+           indicator, no input, no mic, no skip — a held question, like the
+           Deepen separator, but one the user answers by choosing on the next
+           screen. -->
+      <section class="screen" id="screen-transition">
+        <div class="tr">
+          <p class="tr-lead">If you could rewrite the ending, what would it be?</p>
+          <button class="tr-continue" id="tr-continue" type="button">Continue →</button>
+        </div>
+      </section>
+
+      <!-- ============== RESCRIPT · Tier 1 (the pivot) ============== -->
+      <!-- Three exits in plain language — what the user gains, not clinical
+           category names. The middle option is the suggestion, marked by
+           position plus one quiet line only. Selecting (or skipping, which
+           selects the suggestion) advances straight to Watch — the core word
+           was already captured at Deepen Q2. -->
+      <section class="screen" id="screen-rescript" data-rs-state="options">
+
+        <!-- orientation only — Rescript is the fourth (last) authoring step -->
+        <div class="rec-dots" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot"></span>
+          <span class="rec-dot is-current"></span>
+        </div>
+
+        <div class="rs-options">
+          <p class="rs-lead">Choose how the dream ends tonight.</p>
+
+          <div class="rs-options-list">
+            <button class="rs-option" type="button" data-ending="safety">
+              <span class="rs-option-name">Somewhere The Feeling Can't Follow</span>
+              <span class="rs-option-desc">You reach a place it can't get into. Here, you don't have to keep watch.</span>
+            </button>
+
+            <!-- suggested: marked by position (middle) and one line inside the
+                 card, above the name -->
+            <button class="rs-option" type="button" data-ending="mastery">
+              <span class="rs-eyebrow">based on what you shared</span>
+              <span class="rs-option-name">The Feeling Backs Down</span>
+              <span class="rs-option-desc">The thing that came for you stops. You're the one still standing.</span>
+            </button>
+
+            <button class="rs-option" type="button" data-ending="transformation">
+              <span class="rs-option-name">The Feeling Turns Into Something Else</span>
+              <span class="rs-option-desc">What chased you changes into something you don't have to run from.</span>
+            </button>
+          </div>
+
+          <button class="skip" type="button">skip</button>
+        </div>
+      </section>
+      <!-- ============== WATCH · Tier 1 (the hero) ============== -->
+      <!-- No progress dots. Zero UI during playback beyond the persistent X.
+           Particles (canvas) + ambient (Web Audio) + narration are driven by
+           JS through three moments, then the down arrow. -->
+      <section class="screen" id="screen-watch">
+        <canvas class="watch-canvas" id="watch-canvas" aria-hidden="true"></canvas>
+        <p class="watch-word" id="watch-word" aria-hidden="true"></p>
+        <p class="watch-line" id="watch-line" aria-live="polite"></p>
+        <button class="watch-arrow" id="watch-arrow" type="button">Continue</button>
+      </section>
+
+      <!-- ============== HEAL · Tier 1/3 ============== -->
+      <!-- No progress dots: absent on Night 1 (continues Watch's register),
+           absent on Nights 2–9 and Night 10 (signals ritual, not process).
+           "dream" throughout; "nightmare" never appears on this screen. -->
+      <section class="screen" id="screen-heal" data-heal-state="1">
+
+        <!-- Breath particle canvas — Nights 2–9 only; separate from Watch canvas -->
+        <canvas class="heal-breath-canvas" id="heal-breath-canvas" aria-hidden="true"></canvas>
+
+        <!-- Wordmark · the destination, quietly named. Heal only; hidden on
+             the Summary so the user's word is the one color that speaks. -->
+        <div class="heal-wordmark">
+          <span class="wordmark" role="img" aria-label="Dream AI">
+            <span class="wordmark-dream" aria-hidden="true">Dream</span><span class="wordmark-dot" aria-hidden="true"></span><span class="wordmark-ai" aria-hidden="true">AI</span>
+          </span>
+        </div>
+
+        <!-- Night 1 — mechanism + reminder offer (asked once, never again) -->
+        <div class="heal-body heal-n1">
+          <p class="heal-mechanism">The brain updates its patterns through repetition, not through single exposures. Ten nights of the same new ending is the threshold where the change tends to hold.</p>
+          <div class="heal-reminder-section">
+            <p class="heal-reminder-q">Would you like a reminder to watch again tomorrow night?</p>
+            <input class="heal-time-input" id="heal-time" type="time" value="21:00"
+                   aria-label="Reminder time">
+            <button class="heal-btn" id="heal-set-reminder" type="button">Set reminder</button>
+            <button class="heal-ghost-btn" id="heal-skip-reminder" type="button">not now</button>
+          </div>
+        </div>
+
+        <!-- Nights 2–9 — three elements only: night marker, anchor, film -->
+        <div class="heal-body heal-nn">
+          <p class="heal-night-marker" id="heal-night-marker">Night 2 of 10</p>
+          <p class="heal-anchor">The film is the same. That's the point.</p>
+          <button class="heal-btn" id="heal-watch-again" type="button">Watch</button>
+        </div>
+
+        <!-- Reminder confirmation — Night 1, "Set reminder" path only.
+             No forward action. X handles exit. The product holds. -->
+        <div class="heal-body heal-1r">
+          <p class="heal-reminder-confirm" id="heal-reminder-confirm">Reminder set for 9:00 PM</p>
+          <p class="heal-tomorrow">Come back tomorrow for Night 2.</p>
+        </div>
+
+        <!-- Post-watch — Nights 1 and 2–9. Two actions + one quiet guidance line.
+             "Rest now" closes the session. "Watch again" returns to Watch
+             with the re-watch flag so the night counter does not increment.
+             The guidance line updates dynamically to the next night number. -->
+        <div class="heal-body heal-post">
+          <button class="heal-btn" id="heal-done" type="button">Rest now</button>
+          <button class="heal-ghost-btn" id="heal-rewatch" type="button">Watch again</button>
+          <p class="heal-tomorrow" id="heal-tomorrow">Come back tomorrow for Night 2.</p>
+        </div>
+
+        <!-- Night 10 — question first; Summary withheld until answered or skipped -->
+        <div class="heal-body heal-10q">
+          <p class="heal-10-question">What's different about the dream now?</p>
+          <input class="heal-10-input" id="heal-10-input" type="text" inputmode="text"
+                 autocomplete="off" autocorrect="off" spellcheck="false"
+                 placeholder="whatever comes"
+                 aria-label="What's different about the dream now">
+          <button class="heal-btn" id="heal-10-continue" type="button">Continue</button>
+          <button class="heal-10-skip" id="heal-10-skip" type="button">skip</button>
+        </div>
+
+        <!-- Night 10 — Transformation Summary -->
+        <!-- Two layers + center. Top: what they carried in (ghost, small).
+             Center: what's different now — the user's Night 10 answer verbatim
+             (accent color, display size). Below: one closing line. Never
+             generated copy; neutral placeholders if either field is empty. -->
+        <div class="heal-body heal-10s">
+          <p class="heal-summary-carried" id="heal-summary-carried" aria-label="What you carried in"></p>
+          <p class="heal-summary-answer" id="heal-summary-answer" aria-label="What's different now"></p>
+          <div class="heal-summary-lines">
+            <p class="heal-summary-line">You built a place it can't reach.</p>
+          </div>
+          <!-- "Carry it." — not Done, not Complete, not Share. -->
+          <button class="heal-btn" id="heal-carry" type="button">Carry it.</button>
+        </div>
+
+        <!-- Delete · start over — ghost, bottom of screen, never on the Summary -->
+        <button class="heal-delete" id="heal-delete" type="button">Delete your film and start over</button>
+
+        <!-- Single confirmation overlay (sits below the persistent X) -->
+        <div class="heal-confirm" id="heal-confirm" role="dialog" aria-modal="true"
+             aria-label="Delete confirmation">
+          <div class="heal-confirm-box">
+            <p class="heal-confirm-text">This will remove your film and all your answers. This cannot be undone.</p>
+            <div class="heal-confirm-actions">
+              <button class="heal-confirm-delete" id="heal-confirm-delete" type="button">Delete</button>
+              <button class="heal-confirm-keep" id="heal-confirm-keep" type="button">Keep it</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Closing animation — Night 10 only, triggered by "Carry it."
+             Pure black overlay; word and farewell line appear sequentially. -->
+        <div class="heal-close" id="heal-close" aria-hidden="true">
+          <p class="heal-close-word" id="heal-close-word"></p>
+          <p class="heal-close-line" id="heal-close-line">Come back when you need to.</p>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- Persistent · brand corner mark — ghost two-dot icon, every screen
+         except Watch (hidden there by CSS). Decorative; the X carries exit. -->
+
+
+    <!-- Persistent · Exit -->
+    <button class="x-exit" id="x-exit" type="button" aria-label="Exit">
+      <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <line x1="1.5" y1="1.5" x2="16.5" y2="16.5" stroke="#EDE6DF" stroke-width="1.25" stroke-linecap="round"/>
+        <line x1="16.5" y1="1.5" x2="1.5" y2="16.5" stroke="#EDE6DF" stroke-width="1.25" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Persistent · Safety footer (exact copy, every screen) -->
+    <div class="safety-footer" id="safety-footer" role="note">
+      Dream AI uses AI-powered IRT to help transform nightmares. Not a substitute for professional mental health care.
+    </div>
+
+  </div>
+
+<script>
+/* =====================================================================
+   DREAM AI — SKELETON SCRIPT
+   No router, no history API, no framework, no dependencies beyond the
+   motion tokens. Opens by double-click.
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  /* Read a numeric token (e.g. "1600ms" -> 1600) straight from :root so
+     no clinical/motion value is ever duplicated in JS. */
+  var ROOT = document.documentElement;
+  function token(name) {
+    return getComputedStyle(ROOT).getPropertyValue(name).trim();
+  }
+  function tokenNum(name) { return parseFloat(token(name)); }
+
+  var prefersReduced = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------------------------
+     STEP 4 · NAVIGATION — navigateTo(screenId)
+     One state variable. Crossfade is content-only: the frame, the X, and
+     the footer never move because they live outside .screens. Duration &
+     easing come from tokens; reduced-motion is handled globally by the
+     CSS media query that swaps --nav-duration (checked once, here, only
+     to keep the API honest).
+     ------------------------------------------------------------------ */
+  var currentScreen = null;
+  var enterHandlers = {};   /* screenId -> fn(), run each time a screen becomes active */
+
+  function navigateTo(screenId) {
+    var next = document.getElementById(screenId);
+    if (!next || next === currentScreen) return;
+    if (currentScreen) currentScreen.classList.remove('is-active');
+    next.classList.add('is-active');
+    currentScreen = next;
+    /* Per-screen entry hook — lets a screen (re)initialise on every arrival,
+       not just at first script load. Essential for screens re-entered after
+       moving backward (e.g. Deepen's re-record routes back to Record). */
+    if (enterHandlers[screenId]) enterHandlers[screenId]();
+    return next;
+  }
+
+  /* ------------------------------------------------------------------
+     STEP 5 · MICROPHONE PULSE
+     Declared here, instantiated by the Record screen. The cycle PERIOD
+     decelerates continuously (rAF + eased period), never in discrete
+     stages — gradual entrainment for nervous-system co-regulation. CSS
+     keyframes cannot vary a cycle's period without stepping, so the loop
+     is JS-driven by design, reading every value from the tokens above.
+     Under reduced-motion it does not pulse: it rests, settled.
+     ------------------------------------------------------------------ */
+  var micRAF = null;
+
+  function startMicPulse(coreEl, ringEl, opts) {
+    if (!coreEl) return;
+    stopMicPulse();
+    /* Clear any inline styles left by a previous recording so the new pulse
+       always starts from a clean state (CSS rules take effect immediately). */
+    coreEl.style.transform = '';
+    coreEl.style.opacity   = '';
+    if (ringEl) { ringEl.style.transform = ''; ringEl.style.opacity = ''; }
+
+    /* Reduced-motion: keep the clinical co-regulation breath, but run it at a
+       CONSTANT slow cadence (the settled ~4.5s end of the range) — no faster
+       start, no deceleration ramp — the gentlest possible motion. This is a
+       deliberate change from the reference design's frozen ember: freezing
+       removes co-regulation entirely, and would also freeze the mic for the
+       very common "Windows: show animations off" users. Read live per call. */
+    var reduced = !!(window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    /* Subsequent recordings (opts.settled) skip the fast start: the clinical
+       fast->slow ramp is for the FIRST 2am moment; later recordings begin at
+       the calm settled cadence. Reduced-motion also begins settled. */
+    var settled = !!(opts && opts.settled);
+    var pEnd    = tokenNum('--mic-period-end');
+    var pStart  = (reduced || settled) ? pEnd : tokenNum('--mic-period-start');
+    var ramp    = tokenNum('--mic-decel-duration');
+    var sMin    = tokenNum('--mic-scale-min');
+    var sMax    = tokenNum('--mic-scale-max');
+    var oMin    = tokenNum('--mic-opacity-min');
+    var oMax    = tokenNum('--mic-opacity-max');
+    var ringExt = tokenNum('--mic-ring-scale-extra');
+    var ringOMin = tokenNum('--mic-ring-opacity-min');
+    var ringORng = tokenNum('--mic-ring-opacity-range');
+
+    var easeOut = function (u) { return 1 - (1 - u) * (1 - u); };
+
+    var start = performance.now();
+    var last = start;
+    var phase = 0;
+
+    function tick(now) {
+      var u = Math.min((now - start) / ramp, 1);
+      var period = pStart + (pEnd - pStart) * easeOut(u); /* ms per cycle */
+      var dt = now - last; last = now;
+      phase += dt / period;
+      var p = (1 - Math.cos(phase * 2 * Math.PI)) / 2;    /* 0..1, eased */
+
+      coreEl.style.transform = 'scale(' + (sMin + (sMax - sMin) * p).toFixed(4) + ')';
+      coreEl.style.opacity = (oMin + (oMax - oMin) * p).toFixed(3);
+      if (ringEl) {
+        ringEl.style.transform = 'scale(' + (1 + ringExt * p).toFixed(4) + ')';
+        ringEl.style.opacity = (ringOMin + ringORng * (1 - p)).toFixed(3);
+      }
+      micRAF = requestAnimationFrame(tick);
+    }
+    micRAF = requestAnimationFrame(tick);
+  }
+
+  function stopMicPulse() {
+    if (micRAF) { cancelAnimationFrame(micRAF); micRAF = null; }
+  }
+
+  /* ------------------------------------------------------------------
+     Exit affordance — wired here so every screen inherits one guarantee
+     that the user can leave. The destination is defined later (Entry).
+     ------------------------------------------------------------------ */
+  document.getElementById('x-exit').addEventListener('click', function () {
+    if (typeof window.onExit === 'function') window.onExit();
+  });
+
+  /* ------------------------------------------------------------------
+     Expose the skeleton API for screen prompts. Nothing global leaks
+     beyond this surface.
+     ------------------------------------------------------------------ */
+  window.DreamAI = {
+    navigateTo: navigateTo,
+    onEnter: function (screenId, fn) { enterHandlers[screenId] = fn; },
+    startMicPulse: startMicPulse,
+    stopMicPulse: stopMicPulse,
+    prefersReduced: prefersReduced,
+    get currentScreen() { return currentScreen; }
+  };
+
+  /* ------------------------------------------------------------------
+     Fonts-ready gate — belt-and-suspenders against a wrong-typeface
+     flash. display=block already hides text until the face loads; this
+     additionally holds the entire frame dark until every face used in the
+     product has resolved, so the FIRST painted frame is guaranteed in
+     Source Serif 4. A timeout fallback guarantees the app always reveals —
+     a 2am user is never trapped behind a blank screen if fonts are slow,
+     blocked, or offline.
+     ------------------------------------------------------------------ */
+  function reveal() {
+    document.getElementById('frame').classList.add('is-ready');
+  }
+
+  function whenFontsReady(callback) {
+    if (!document.fonts || !document.fonts.load) { callback(); return; }
+
+    var faces = [
+      document.fonts.load('300 1em "Source Serif 4"'),
+      document.fonts.load('400 1em "Source Serif 4"'),
+      document.fonts.load('500 1em "Source Serif 4"'),
+      document.fonts.load('400 1em "IBM Plex Sans"'),
+      document.fonts.load('500 1em "IBM Plex Sans"'),
+      document.fonts.load('400 1em "IBM Plex Mono"'),
+      document.fonts.load('500 1em "IBM Plex Mono"')
+    ];
+
+    var done = false;
+    var finish = function () { if (done) return; done = true; callback(); };
+
+    Promise.all(faces).then(finish).catch(finish);
+    setTimeout(finish, 3000); /* fallback — never trap the user */
+  }
+
+  /* ------------------------------------------------------------------
+     BOOT — URL-param demo mode + hasFilm branching.
+
+     Three paths:
+     1. ?night=N  → seed a complete demo state and open Heal at Night N.
+        Works without any prior session; generates placeholder data so
+        evaluators can access any night directly without setup.
+     2. No param, hasFilm=true  → returning user enters rehearsal flow
+        (Heal at their current night).
+     3. No param, no film  → first-time user enters creation flow (Record).
+
+     Demo state is written to sessionStorage (key: dreamai.demo), never to
+     localStorage. This means:
+     — Demo never overwrites or corrupts a real user's progress.
+     — Demo state evaporates when the tab closes or the user navigates to
+       a non-demo URL. No cleanup step required from the user or evaluator.
+     — Store.read() checks sessionStorage first; Store.write() writes back
+       to whichever store holds the active state, so screens never need to
+       know which mode they are in.
+     ------------------------------------------------------------------ */
+  (function () {
+    /* Demo placeholder — generic enough to work for any night, specific
+       enough that nothing reads as absent or broken. */
+    var DEMO = {
+      _demo: true,
+      recorded: true,
+      via: 'text',
+      text: 'A corridor that kept extending. Each door opened onto more doors.',
+      recordedAt: new Date().toISOString(),
+      hasFilm: true,
+      rescript: { ending: 'mastery' },
+      coreWord: 'Dread',                 /* captured at Deepen Q2 (emotion) */
+      deepen: {
+        peak:    { via: 'text', text: 'The moment the last door opened onto nothing.' },
+        emotion: { via: 'text', text: 'Dread' },
+        sensory: { via: 'text', text: 'The sound of my own breathing.' }
+      }
+    };
+
+    var DEMO_KEY = 'dreamai.demo';
+    var startScreen = 'screen-record';
+
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var raw    = params.get('night');
+      var n      = raw !== null ? parseInt(raw, 10) : NaN;
+
+      if (!isNaN(n) && n >= 1 && n <= 10) {
+        /* Demo mode: seed state in sessionStorage only — localStorage is
+           untouched so real user progress is never overwritten.
+           healNight is pre-increment (onEnter adds 1), so store N-1.
+           reminderSet=true on nights 2+ so the reminder form never shows. */
+        var demo = {};
+        for (var k in DEMO) { if (DEMO.hasOwnProperty(k)) demo[k] = DEMO[k]; }
+        demo.healNight   = n - 1;
+        demo.healRewatch = false;
+        demo.reminderSet = (n > 1);
+        sessionStorage.setItem(DEMO_KEY, JSON.stringify(demo));
+        startScreen = 'screen-heal';
+      } else {
+        /* Normal flow: clear any stale demo overlay (handles the case where
+           the user navigates from ?night=N to the plain URL in the same tab),
+           then branch on whether a real film already exists.
+           Migration: earlier code wrote demo state (including hasFilm:true) to
+           localStorage. The _demo flag identifies that contamination — it is
+           never present in real session data. Clear it so the user reaches
+           Record as a first-time user rather than being permanently locked into
+           the rehearsal flow. */
+        sessionStorage.removeItem(DEMO_KEY);
+        var s = JSON.parse(localStorage.getItem('dreamai.v1') || '{}');
+        if (s._demo) { localStorage.removeItem('dreamai.v1'); s = {}; }
+        if (s.hasFilm) startScreen = 'screen-heal';
+      }
+    } catch (e) { /* any parse/storage failure → safe fallback to Record */ }
+
+    navigateTo(startScreen);
+  })();
+
+  whenFontsReady(reveal);
+})();
+</script>
+
+<script>
+/* =====================================================================
+   RECORD · Tier 1 — screen logic
+   No getUserMedia: a system mic-permission dialog is a surveillance-implying
+   interruption that asks something of the user before the product has earned
+   it. Recording is interaction-real (tap start/stop, the clinical pulse,
+   persisted, exit-safe); the audio capture itself is mocked.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var D = window.DreamAI;
+
+  /* Shared persistence — written the instant recording stops, so nothing is
+     lost if the user exits immediately after.
+     Demo sessions live in sessionStorage (key: dreamai.demo). read() checks
+     there first so all screens work identically in demo and real modes.
+     write() patches whichever store is active — sessionStorage during demo,
+     localStorage otherwise — so demo interactions never touch real data. */
+  var Store = {
+    KEY:      'dreamai.v1',
+    DEMO_KEY: 'dreamai.demo',
+    _demoActive: function () {
+      try { return !!sessionStorage.getItem(this.DEMO_KEY); }
+      catch (e) { return false; }
+    },
+    read: function () {
+      try {
+        if (this._demoActive()) {
+          return JSON.parse(sessionStorage.getItem(this.DEMO_KEY)) || {};
+        }
+        return JSON.parse(localStorage.getItem(this.KEY)) || {};
+      }
+      catch (e) { return {}; }
+    },
+    write: function (patch) {
+      var s = this.read();
+      for (var k in patch) { if (patch.hasOwnProperty(k)) s[k] = patch[k]; }
+      try {
+        if (this._demoActive()) {
+          sessionStorage.setItem(this.DEMO_KEY, JSON.stringify(s));
+        } else {
+          localStorage.setItem(this.KEY, JSON.stringify(s));
+        }
+      } catch (e) {}
+      return s;
+    }
+  };
+  D.Store = Store;
+
+  var screen = document.getElementById('screen-record');
+  var mic    = document.getElementById('rec-mic');
+  var core   = mic.querySelector('.mic-core');
+  var ring   = mic.querySelector('.mic-ring');
+  var line   = document.getElementById('rec-line');
+  var input  = document.getElementById('rec-input');
+  var film   = document.getElementById('rec-film');
+  var btnContinue = document.getElementById('rec-continue');
+  var btnAgain    = document.getElementById('rec-again');
+
+  /* Copy — every string is about the user, never about the app.
+     "Nightmare" is the user's word here; "dream" has not happened yet. */
+  var LINE_IDLE      = screen.getAttribute('data-line-idle');
+  var LINE_RECORDING = 'Take all the time you need.';
+  var LINE_DONE      = 'Heard.';
+
+  function setState(s)  { screen.setAttribute('data-rec-state', s); }
+  function setMic(s)    { mic.setAttribute('data-mic-state', s); }
+  function setSource(v) { if (v) screen.setAttribute('data-rec-source', v);
+                          else screen.removeAttribute('data-rec-source'); }
+
+  /* First-time vs returning — adds one element (the film), never a layout. */
+  screen.setAttribute('data-rec-variant', Store.read().hasFilm ? 'returning' : 'first');
+
+  function toIdle() {
+    D.stopMicPulse();
+    input.value = '';
+    setSource(null);
+    setState('idle'); setMic('idle');
+    line.textContent = LINE_IDLE;
+    mic.setAttribute('aria-label', 'Record');
+  }
+
+  function startRecording() {
+    input.value = '';                 /* a spoken nightmare supersedes typed text */
+    setSource(null);
+    setState('recording'); setMic('recording');
+    line.textContent = LINE_RECORDING;
+    mic.setAttribute('aria-label', 'Stop recording');
+    /* First recording: the full fast->slow ramp (clinical, for the 2am moment).
+       No opts.settled here — that calm start is for later recordings. */
+    D.startMicPulse(core, ring);
+  }
+
+  function stopRecording() {
+    D.stopMicPulse();
+    Store.write({ recorded: true, via: 'voice', recordedAt: new Date().toISOString() }); /* exit-safe */
+    setState('done'); setMic('done'); setSource('voice');
+    line.textContent = LINE_DONE;  /* "Heard." — reception, never a count */
+    mic.setAttribute('aria-label', 'Recorded');
+  }
+
+  mic.addEventListener('click', function () {
+    var st = screen.getAttribute('data-rec-state');
+    if (st === 'idle') startRecording();
+    else if (st === 'recording') stopRecording();
+    /* done + voice: the mic is inert; "again" re-records. done + text: a tap
+       switches to speaking instead. */
+    else if (st === 'done' && screen.getAttribute('data-rec-source') === 'text') startRecording();
+  });
+
+  /* "or type" — a typed nightmare is received the same way a spoken one is.
+     The mic stays at rest (no settled ember); the field remains so they can
+     keep editing. Written exit-safe as they type. */
+  input.addEventListener('input', function () {
+    if (screen.getAttribute('data-rec-state') === 'recording') return;
+    if (input.value.trim().length) {
+      Store.write({ recorded: true, via: 'text', text: input.value, recordedAt: new Date().toISOString() });
+      setSource('text'); setState('done'); setMic('idle');
+      line.textContent = LINE_DONE;
+      mic.setAttribute('aria-label', 'Record');
+    } else {
+      setSource(null); setState('idle'); setMic('idle');
+      line.textContent = LINE_IDLE;
+    }
+  });
+
+  btnAgain.addEventListener('click', toIdle);
+  btnContinue.addEventListener('click', function () { D.navigateTo('screen-analyze'); });
+  if (film) film.addEventListener('click', function () { D.navigateTo('screen-watch'); });
+
+  /* The exit guarantee — reachable on every state, including mid-recording. */
+  window.onExit = function () {
+    D.stopMicPulse();
+    document.getElementById('frame').classList.remove('is-ready');
+  };
+
+  /* Re-entry (e.g. Deepen's re-record routes back here) lands on a clean idle
+     mic, ready to re-speak — not the lingering "Heard." done state. */
+  D.onEnter('screen-record', toIdle);
+
+  toIdle();
+})();
+</script>
+
+<script>
+/* =====================================================================
+   ANALYZE · Tier 2 — screen logic
+   No state, no generation in the build: the synthesis is static placeholder
+   content, present on arrival. Both the forward action and skip go to
+   Deepen — the only difference is whether the user read the map. Skip never
+   requires reading anything first.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var D = window.DreamAI;
+  function toDeepen() { D.navigateTo('screen-deepen-1'); }
+  document.getElementById('an-continue').addEventListener('click', toDeepen);
+  document.getElementById('an-skip').addEventListener('click', toDeepen);
+})();
+</script>
+
+<script>
+/* =====================================================================
+   DEEPEN · Tier 3 — screen logic
+   Two round screens wired by one shared controller. Within a round, two
+   questions reveal sequentially: the active question carries the mic; once
+   answered or skipped, it rises to a secondary line and the next fades in.
+   Voice capture is mocked (no getUserMedia — a permission dialog implies
+   surveillance before trust is earned); interaction is real and exit-safe.
+   Both the forward action and skip advance; the film builds from whatever
+   exists, including nothing — nothing implies answering beats skipping.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var D = window.DreamAI;
+  var ROOT = document.documentElement;
+  function tokenNum(n) { return parseFloat(getComputedStyle(ROOT).getPropertyValue(n)); }
+
+  /* Question copy. Round 1: the emotional hotspot — Q2 captures the core word.
+     Round 2: a single sensory detail. No "feel"/variant; each describes what it
+     looks for, not how to relate. "Nightmare" throughout — "dream" has not
+     happened yet. */
+  var Q = {
+    peak:    "What's the worst moment?",
+    emotion: "What would you call what you feel there?",
+    sensory: "One thing you could see or hear in it — just one."
+  };
+
+  /* One controller per round. cfg: { id, a:{key,text}, b:{key,text}, onFinish } */
+  function initRound(cfg) {
+    var screen    = document.getElementById(cfg.id);
+    var secondary = screen.querySelector('.dp-secondary');
+    var active    = screen.querySelector('.dp-active');
+    var mic       = screen.querySelector('.mic');
+    var core      = screen.querySelector('.mic-core');
+    var ring      = screen.querySelector('.mic-ring');
+    var input     = screen.querySelector('.type-input');
+    var btnGo     = screen.querySelector('.dp-continue');
+    var btnSkip   = screen.querySelector('.skip');
+    var btnAgain  = screen.querySelector('.dp-again');
+
+    var step = 1;        /* 1 -> question a active, 2 -> question b active */
+    var answer = null;   /* {source:'voice'} | {source:'text', text} | null */
+
+    function setState(s) { screen.setAttribute('data-dp-state', s); }
+    function clearAnswer() { answer = null; screen.removeAttribute('data-dp-source'); }
+    function current() { return step === 1 ? cfg.a : cfg.b; }
+
+    function toIdle() {
+      D.stopMicPulse();
+      input.value = '';
+      clearAnswer();
+      setState('idle');
+      mic.setAttribute('data-mic-state', 'idle');
+      mic.setAttribute('aria-label', 'Answer by voice');
+    }
+
+    /* Persist whatever the user gave for the current question (exit-safe,
+       single dreamai.v1 key). Nothing is written on skip. */
+    function persist() {
+      if (!answer) return;
+      var dp = D.Store.read().deepen || {};
+      dp[current().key] = (answer.source === 'text')
+        ? { via: 'text', text: answer.text }
+        : { via: 'voice' };
+      D.Store.write({ deepen: dp });
+    }
+
+    /* Reveal question b: the active (a) rises to the secondary line, b fades
+       in below. If the next question is text-only (cfg.b.textOnly), hide the
+       mic and update the input placeholder so no voice affordance appears.
+       Crossfade via --nav-duration. */
+    function revealSecond() {
+      var dur = tokenNum('--nav-duration');
+      secondary.textContent = cfg.a.text;       /* recap the question just left */
+      active.style.opacity = '0';
+      screen.setAttribute('data-step', '2');    /* secondary slides up (CSS) */
+      setTimeout(function () {
+        step = 2;
+        active.textContent = cfg.b.text;
+        active.style.opacity = '1';
+        if (cfg.b && cfg.b.textOnly) {
+          screen.setAttribute('data-text-only', '');
+          input.placeholder = cfg.b.placeholder || 'name it';
+        } else {
+          screen.removeAttribute('data-text-only');
+          input.placeholder = 'or type';
+        }
+        toIdle();
+      }, dur);
+    }
+
+    /* Q2 ("emotion") is the word-capture moment: its answer becomes the
+       product's core word (dreamai.v1.coreWord), the same value Watch and the
+       Transformation Summary read verbatim. Written on ADVANCE — Continue or
+       skip. A typed answer is the word; a voice answer or a skip stores "".
+       The neutral placeholder is applied later at the read sites, never here. */
+    function captureCoreWord() {
+      if (current().key !== 'emotion') return;
+      var w = (answer && answer.source === 'text') ? answer.text.trim() : '';
+      try { D.Store.write({ coreWord: w }); } catch (e) {}
+    }
+
+    function proceed() {        /* advance after answering or skipping */
+      D.stopMicPulse();
+      captureCoreWord();
+      if (step === 1 && cfg.b) revealSecond();   /* single-question round: no b */
+      else cfg.onFinish();
+    }
+
+    mic.addEventListener('click', function () {
+      if (screen.getAttribute('data-dp-state') === 'recording') {
+        D.stopMicPulse();
+        answer = { source: 'voice' };
+        screen.setAttribute('data-dp-source', 'voice');
+        setState('answered');
+        mic.setAttribute('data-mic-state', 'done');
+        mic.setAttribute('aria-label', 'Recorded — answer again');
+      } else {
+        input.value = '';                       /* a voice answer supersedes typed text */
+        screen.removeAttribute('data-dp-source');
+        setState('recording');
+        mic.setAttribute('data-mic-state', 'recording');
+        mic.setAttribute('aria-label', 'Stop');
+        D.startMicPulse(core, ring, { settled: true });  /* later recordings begin calm */
+      }
+    });
+
+    input.addEventListener('input', function () {
+      if (screen.getAttribute('data-dp-state') === 'recording') return;
+      if (input.value.trim().length) {
+        answer = { source: 'text', text: input.value };
+        screen.setAttribute('data-dp-source', 'text');
+        setState('answered');
+      } else {
+        clearAnswer();
+        setState('idle');
+      }
+    });
+
+    btnGo.addEventListener('click', function () { persist(); proceed(); });
+    btnSkip.addEventListener('click', proceed);          /* no answer, still lands somewhere */
+    btnAgain.addEventListener('click', function () {     /* re-record THIS question only */
+      toIdle();   /* clears the current answer + resets the mic; stays on this question */
+    });
+
+    /* Back to Q1 — only wired on Round 1, only visible at step 2 */
+    var btnBackQ1 = screen.querySelector('.dp-back');
+    if (btnBackQ1) {
+      btnBackQ1.addEventListener('click', function () {
+        if (step === 2) {
+          step = 1;
+          screen.setAttribute('data-step', '1');
+          screen.removeAttribute('data-text-only');
+          input.placeholder = 'or type';
+          secondary.textContent = '';
+          active.textContent = cfg.a.text;
+          active.style.opacity = '1';
+          toIdle();
+          btnBackQ1.style.display = 'none';
+        }
+      });
+    }
+
+    /* Show back button when step becomes 2 */
+    var origReveal = revealSecond;
+    function revealSecondWithBack() {
+      origReveal();
+      if (btnBackQ1) setTimeout(function() { btnBackQ1.style.display = ''; }, 420);
+    }
+
+    /* Fresh start whenever this round is entered (incl. after re-record). */
+    function reset() {
+      step = 1;
+      screen.setAttribute('data-step', '1');
+      screen.removeAttribute('data-text-only');
+      input.placeholder = 'or type';
+      secondary.textContent = '';
+      active.textContent = cfg.a.text;
+      active.style.opacity = '1';
+      toIdle();
+    }
+    return { reset: reset };
+  }
+
+  var round1 = initRound({
+    id: 'screen-deepen-1',
+    a: { key: 'peak',    text: Q.peak },
+    b: { key: 'emotion', text: Q.emotion, textOnly: true, placeholder: 'name it' },
+    onFinish: function () { D.navigateTo('screen-deepen-sep'); }
+  });
+  var round2 = initRound({
+    id: 'screen-deepen-2',
+    a: { key: 'sensory', text: Q.sensory },
+    /* Round 2 holds a single question now (Q4 removed); the two-round structure
+       and the separator stay. b omitted -> proceed() finishes after Q3. */
+    onFinish: function () { D.navigateTo('screen-transition'); }
+  });
+
+  D.onEnter('screen-deepen-1', round1.reset);
+  D.onEnter('screen-deepen-2', round2.reset);
+
+  /* Separator — a held breath: light the horizon, hold, then cross to
+     Round 2. The persistent X always allows leaving mid-breath. */
+  var sepTimer = null;
+  D.onEnter('screen-deepen-sep', function () {
+    var horizon = document.querySelector('#screen-deepen-sep .dp-horizon');
+    if (sepTimer) clearTimeout(sepTimer);
+    horizon.classList.remove('is-lit');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { horizon.classList.add('is-lit'); });
+    });
+    sepTimer = setTimeout(function () { D.navigateTo('screen-deepen-2'); }, 1300);
+  });
+
+  /* Transition — the held question between Deepen and Rescript. One forward
+     action; the answer is given by choosing on Rescript. */
+  var trContinue = document.getElementById('tr-continue');
+  if (trContinue) {
+    trContinue.addEventListener('click', function () { D.navigateTo('screen-rescript'); });
+  }
+
+  /* Initialise Round 1 now so it is ready before first entry. */
+  round1.reset();
+})();
+</script>
+
+<script>
+/* =====================================================================
+   RESCRIPT · Tier 1 — screen logic (the pivot)
+   Three exits; the middle one is the suggestion (position + one line of copy
+   only). Skip selects it — never a dead end. There is no second state: the
+   user's core word was already captured at Deepen Q2 (dreamai.v1.coreWord),
+   so selecting an ending writes only that choice and advances straight to
+   Watch. "dream" from here on; "nightmare" appears nowhere on this screen.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var D = window.DreamAI;
+
+  var screen      = document.getElementById('screen-rescript');
+  var optionBtns  = screen.querySelectorAll('.rs-option');
+  var skip        = screen.querySelector('.skip');
+
+  /* The suggestion: the middle option, earned by everything they shared. */
+  var SUGGESTED = 'mastery';
+
+  /* Record the chosen ending and go straight to Watch — no word field. */
+  function chooseEnding(e) {
+    try { D.Store.write({ rescript: { ending: e } }); } catch (err) {}
+    D.navigateTo('screen-watch');
+  }
+
+  Array.prototype.forEach.call(optionBtns, function (btn) {
+    btn.addEventListener('click', function () { chooseEnding(btn.getAttribute('data-ending')); });
+  });
+
+  /* Skip selects the suggested option and advances — never a dead end. */
+  skip.addEventListener('click', function () { chooseEnding(SUGGESTED); });
+
+  screen.setAttribute('data-rs-state', 'options');
+})();
+</script>
+
+<script>
+/* =====================================================================
+   WATCH · Tier 1 — the hero. Session A (text narration) is the complete
+   deliverable. Session B (Web Speech voice) was CUT: on the Windows target
+   the SAPI voices are unmistakably synthetic and would fail the
+   "indistinguishable from intentional design" standard, breaking the
+   relocation at the most open moment. Text narration carries it alone.
+
+   Three layers, one engine: Canvas particles, Web Audio ambient, text
+   narration — no libraries, no files, no build step. Driven through three
+   moments (word alone -> particles+sound -> narration cut), then a single
+   discrete down arrow. Everything is wrapped so a failure (audio blocked,
+   no localStorage) never breaks the experience.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var D = window.DreamAI;
+
+  var screen = document.getElementById('screen-watch');
+  var canvas = document.getElementById('watch-canvas');
+  var wordEl = document.getElementById('watch-word');
+  var lineEl = document.getElementById('watch-line');
+  var arrow  = document.getElementById('watch-arrow');
+  var g2d    = canvas.getContext('2d');
+
+  var reduced = !!(window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---- the user's core word (Deepen Q2), retrieved before the transition.
+     Empty -> "" here; the neutral placeholder is applied per use site
+     (Moment 1 display vs. the arrival line), never generated copy. -------- */
+  function getWord() {
+    try { return (D.Store.read().coreWord || '').trim(); }
+    catch (e) { return ''; }                 /* retrieval fails -> still works */
+  }
+  /* Mock hotspot read: if the Deepen emotion was typed as fear, the particle
+     field starts slightly agitated and decelerates over Phase 1. */
+  function fearStart() {
+    try {
+      var e = ((D.Store.read().deepen) || {}).emotion;
+      return !!(e && e.via === 'text' && /fear|afraid|scared|terror|panic|dread/i.test(e.text));
+    } catch (_) { return false; }
+  }
+
+  /* ---- narration (Find Safety; Ground order: anchor -> environment -> arrival)
+     MOCK. The other two endings — COME OUT STRONGER and CHANGE THE STORY — and
+     the selection between all three (from the recording + Deepen responses)
+     belong to the AI backend. Only Find Safety is built in the prototype. */
+  function buildLines(word) {
+    return [
+      { phase: 'anchor',      text: 'The ground beneath you is solid. The air is cooler here.', hold: 4500 },
+      { phase: 'environment', text: 'There is no sound that doesn\'t belong.',                  hold: 3500 },
+      { phase: 'arrival',     text: 'You have arrived. ' + (word || 'this') + ' has less weight here.', hold: 4000 }
+    ];
+  }
+
+  /* ---- timers (all cancelable so exit/re-enter never leaks) ----------- */
+  var timers = [];
+  function later(fn, ms) { var id = setTimeout(fn, ms); timers.push(id); return id; }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  /* ================= LAYER 1 · CANVAS PARTICLES ===================== */
+  var particles = [], raf = null, W = 0, H = 0, DPR = 1, sprite = null;
+  /* phase params lerp smoothly so the field's response is felt, not seen */
+  var phaseTarget = {
+    anchor:      { drift: 0.022, jitter: 0.18, opa: 1.00 },
+    environment: { drift: 0.010, jitter: 0.10, opa: 1.06 },
+    arrival:     { drift: 0.030, jitter: 0.07, opa: 1.18 }
+  };
+  var cur = { drift: 0.022, jitter: 0.18, opa: 1.0 };
+
+  function makeSprite() {
+    var s = document.createElement('canvas'); s.width = s.height = 64;
+    var c = s.getContext('2d');
+    var grd = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0,   'rgba(201,118,79,1)');
+    grd.addColorStop(0.4, 'rgba(201,118,79,0.45)');
+    grd.addColorStop(1,   'rgba(201,118,79,0)');
+    c.fillStyle = grd; c.fillRect(0, 0, 64, 64);
+    return s;
+  }
+
+  function sizeCanvas() {
+    var r = canvas.getBoundingClientRect();
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+    g2d.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  function buildParticles(agitated) {
+    sprite = sprite || makeSprite();
+    particles = [];
+    var n = 70, v = agitated ? 1.4 : 0.4;
+    for (var i = 0; i < n; i++) {
+      var z = Math.random();                 /* depth: 0 far .. 1 near */
+      particles.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * v, vy: (Math.random() - 0.5) * v,
+        z: z, r: 0.6 + z * 2.6, a: 0.14 + z * 0.42
+      });
+    }
+    /* fear: start agitated, then let cur.jitter/drift decay to the calm
+       anchor target over the first phase */
+    cur.jitter = agitated ? 0.6 : phaseTarget.anchor.jitter;
+    cur.drift  = agitated ? 0.030 : phaseTarget.anchor.drift;
+  }
+
+  function step() {
+    var t = phaseTarget[phaseName] || phaseTarget.anchor;
+    cur.drift  += (t.drift  - cur.drift)  * 0.02;
+    cur.jitter += (t.jitter - cur.jitter) * 0.02;
+    cur.opa    += (t.opa    - cur.opa)    * 0.02;
+    var damp = reduced ? 0.90 : 0.94, cx = W / 2, cy = H / 2;
+
+    g2d.clearRect(0, 0, W, H);
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      var dx = cx - p.x, dy = cy - p.y, dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      p.vx += (dx / dist) * cur.drift + (Math.random() - 0.5) * cur.jitter * 0.05;
+      p.vy += (dy / dist) * cur.drift + (Math.random() - 0.5) * cur.jitter * 0.05;
+      p.vx *= damp; p.vy *= damp;
+      var par = 0.3 + p.z;                   /* parallax by depth */
+      p.x += p.vx * par; p.y += p.vy * par;
+      if (dist < 26) {                       /* reached the centre -> respawn at an edge */
+        var edge = Math.floor(Math.random() * 4);
+        p.x = edge === 1 ? W : edge === 3 ? 0 : Math.random() * W;
+        p.y = edge === 0 ? 0 : edge === 2 ? H : Math.random() * H;
+        p.vx = (Math.random() - 0.5) * 0.3; p.vy = (Math.random() - 0.5) * 0.3;
+      }
+      var size = p.r * 8;
+      g2d.globalAlpha = Math.min(1, p.a * cur.opa);
+      g2d.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
+    }
+    g2d.globalAlpha = 1;
+    raf = requestAnimationFrame(step);
+  }
+  function startParticles(agitated) { sizeCanvas(); buildParticles(agitated); if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(step); }
+  function stopParticles() { if (raf) cancelAnimationFrame(raf); raf = null; if (W) g2d.clearRect(0, 0, W, H); }
+
+  /* ================= LAYER 2 · WEB AUDIO AMBIENT =================== */
+  var actx = null, master = null, lp = null, fifthGain = null, nodes = [];
+  function startAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      actx = new AC();
+      master = actx.createGain(); master.gain.value = 0;
+      lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300; lp.Q.value = 0.7;
+      lp.connect(master); master.connect(actx.destination);
+      /* drone: root + a fifth (fifth swells in only at arrival) + a slow beat */
+      [{ f: 55, g: 0.5 }, { f: 82.41, g: 0.0 }, { f: 55 * 1.004, g: 0.32 }].forEach(function (d, i) {
+        var o = actx.createOscillator(); o.type = 'sine'; o.frequency.value = d.f;
+        var g = actx.createGain(); g.gain.value = d.g;
+        o.connect(g); g.connect(lp); o.start(); nodes.push(o);
+        if (i === 1) fifthGain = g;
+      });
+      /* brown-noise "air" bed — low, lowpassed; oscillators carry continuity */
+      var len = Math.floor(actx.sampleRate * 6), buf = actx.createBuffer(1, len, actx.sampleRate), dt = buf.getChannelData(0), last = 0;
+      for (var i = 0; i < len; i++) { var wn = Math.random() * 2 - 1; last = (last + 0.02 * wn) / 1.02; dt[i] = last * 3.2; }
+      var noise = actx.createBufferSource(); noise.buffer = buf; noise.loop = true;
+      var nlp = actx.createBiquadFilter(); nlp.type = 'lowpass'; nlp.frequency.value = 220;
+      var ng = actx.createGain(); ng.gain.value = 0.5;
+      noise.connect(nlp); nlp.connect(ng); ng.connect(lp); noise.start(); nodes.push(noise);
+      /* breathing LFO on the master gain */
+      var lfo = actx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.07;
+      var lg = actx.createGain(); lg.gain.value = 0.015; lfo.connect(lg); lg.connect(master.gain); lfo.start(); nodes.push(lfo);
+      if (actx.resume) actx.resume();
+    } catch (e) { actx = null; }            /* audio blocked -> experience still runs */
+  }
+  function audioFadeIn() {
+    if (!actx) return;
+    var t = actx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(0.10, t + 3.0);
+  }
+  function audioPhase(ph) {
+    if (!actx) return;
+    var t = actx.currentTime;
+    var cut = ph === 'anchor' ? 300 : ph === 'environment' ? 620 : 520;
+    lp.frequency.cancelScheduledValues(t);
+    lp.frequency.setValueAtTime(lp.frequency.value, t);
+    lp.frequency.linearRampToValueAtTime(cut, t + 3);
+    if (ph === 'arrival' && fifthGain) {     /* the quiet fifth-swell of being held */
+      fifthGain.gain.cancelScheduledValues(t);
+      fifthGain.gain.setValueAtTime(fifthGain.gain.value, t);
+      fifthGain.gain.linearRampToValueAtTime(0.30, t + 3);
+      master.gain.linearRampToValueAtTime(0.12, t + 3);
+    }
+  }
+  function stopAudio() {
+    if (!actx) return;
+    try {
+      var t = actx.currentTime, a = actx;
+      master.gain.cancelScheduledValues(t);
+      master.gain.linearRampToValueAtTime(0, t + 0.4);
+      setTimeout(function () { try { a.close(); } catch (_) {} }, 500);
+    } catch (e) {}
+    actx = null; master = null; lp = null; fifthGain = null; nodes = [];
+  }
+
+  /* ================= LAYER 3/4 · NARRATION + SYNC ================== */
+  var phaseName = 'anchor';
+  function setPhase(ph) { phaseName = ph; audioPhase(ph); }   /* particles read phaseName; audio ramps */
+
+  function narrate(lines, i) {
+    if (i >= lines.length) { scheduleArrow(); return; }
+    var n = lines[i];
+    setPhase(n.phase);
+    var fi = reduced ? 200 : 1200, fo = reduced ? 200 : 1500, gap = 2000;
+    lineEl.textContent = n.text;
+    lineEl.style.transition = 'opacity ' + fi + 'ms ease-out';
+    void lineEl.offsetWidth;                 /* restart the transition */
+    lineEl.style.opacity = '1';
+    later(function () {
+      lineEl.style.transition = 'opacity ' + fo + 'ms ease-out';
+      lineEl.style.opacity = '0';
+      later(function () { narrate(lines, i + 1); }, fo + gap);
+    }, fi + n.hold);                          /* last line holds 4s before fading */
+  }
+
+  function scheduleArrow() {
+    later(function () { arrow.classList.add('is-on'); }, reduced ? 1500 : 3000); /* generous pause */
+  }
+
+  /* ================= THE THREE MOMENTS ============================= */
+  function run() {
+    cleanup(true);                           /* fresh start every entry */
+    var word = getWord(), agitated = fearStart();
+    var lines = buildLines(word);
+
+    /* Moment 1 (3s): the word alone, centered, pure black. No particles, no sound.
+       Empty core word -> a neutral placeholder for the standalone display only. */
+    wordEl.textContent = word || 'This place';
+    void wordEl.offsetWidth;
+    wordEl.classList.add('is-on');
+    startAudio();                            /* created within the entry gesture; silent (gain 0) */
+
+    /* Moment 2 (4.5s): word fades, particles emerge, ambient fades in. No text. */
+    later(function () {
+      wordEl.classList.remove('is-on');
+      canvas.classList.add('is-on');
+      startParticles(agitated);
+      audioFadeIn();
+    }, 3000);
+
+    /* Moment 3: direct cut — narration begins mid-particle-field. */
+    later(function () { narrate(lines, 0); }, 7500);
+  }
+
+  function cleanup(soft) {
+    clearTimers();
+    stopParticles();
+    stopAudio();
+    wordEl.classList.remove('is-on');
+    canvas.classList.remove('is-on');
+    arrow.classList.remove('is-on');
+    lineEl.style.transition = 'none';
+    lineEl.style.opacity = '0';
+    phaseName = 'anchor';
+    cur = { drift: 0.022, jitter: 0.18, opa: 1.0 };
+  }
+
+  /* ---- exit: X, swipe down, and the arrow all go to Heal ------------- */
+  function exit() {
+    cleanup();
+    /* Mark the film as existing the moment the user leaves Watch — this is
+       the branching condition for the rehearsal vs creation boot decision. */
+    try { D.Store.write({ hasFilm: true }); } catch (e) {}
+    D.navigateTo('screen-heal');
+  }
+  arrow.addEventListener('click', exit);
+
+  var startY = null;
+  screen.addEventListener('pointerdown', function (e) { startY = e.clientY; });
+  screen.addEventListener('pointerup', function (e) {
+    if (startY != null && (e.clientY - startY) > 80) exit();   /* swipe down */
+    startY = null;
+  });
+
+  /* On entry: run the experience and point the persistent X at Heal. */
+  D.onEnter('screen-watch', function () {
+    window.onExit = exit;                    /* the X exits the experience -> Heal */
+    run();
+  });
+})();
+</script>
+
+<script>
+/* =====================================================================
+   HEAL · Tier 1/3 — screen logic
+   Three fully distinct night states: Night 1, Nights 2–9, Night 10 + Summary.
+   State is driven by healNight in localStorage, incremented on each new
+   Watch→Heal transition. Re-watches from the Nights 2–9 "Watch" button are
+   flagged so they do not increment the counter.
+
+   The user's word (from Rescript) is the only copy that comes from the
+   user — retrieved verbatim from localStorage. Neutral placeholder if
+   retrieval fails or the field was left blank. Generated copy never
+   substitutes. "dream" throughout; "nightmare" never appears.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var D = window.DreamAI;
+  var screen  = document.getElementById('screen-heal');
+  var n1El    = screen.querySelector('.heal-n1');
+  var nnBody  = screen.querySelector('.heal-nn');
+  var breathTimer = null;
+
+  /* ---- Breath particle system (Nights 2–9) ---------------------------
+     Separate from Watch's canvas; same warm #C9764F colour, lower
+     opacity and fewer particles so it reads as ambient, not cinematic. */
+  var breathCanvas  = document.getElementById('heal-breath-canvas');
+  var breathCtx     = breathCanvas ? breathCanvas.getContext('2d') : null;
+  var breathParts   = [];
+  var breathRaf     = null;
+  var breathSprite  = null;
+  var bW = 0, bH = 0, bDPR = 1;
+
+  function makeBreathSprite() {
+    var s = document.createElement('canvas'); s.width = s.height = 64;
+    var c = s.getContext('2d');
+    var g = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0,   'rgba(201,118,79,0.55)');
+    g.addColorStop(0.4, 'rgba(201,118,79,0.18)');
+    g.addColorStop(1,   'rgba(201,118,79,0)');
+    c.fillStyle = g; c.fillRect(0, 0, 64, 64);
+    return s;
+  }
+
+  function sizeBreathCanvas() {
+    var r = breathCanvas.getBoundingClientRect();
+    bDPR = Math.min(window.devicePixelRatio || 1, 2);
+    bW = r.width; bH = r.height;
+    breathCanvas.width  = Math.round(bW * bDPR);
+    breathCanvas.height = Math.round(bH * bDPR);
+    breathCtx.setTransform(bDPR, 0, 0, bDPR, 0, 0);
+  }
+
+  function buildBreathParticles() {
+    breathSprite = breathSprite || makeBreathSprite();
+    breathParts  = [];
+    var n = 30;
+    for (var i = 0; i < n; i++) {
+      var z = Math.random();
+      breathParts.push({
+        x:  Math.random() * bW,
+        y:  Math.random() * bH,
+        vx: (Math.random() - 0.5) * 0.18,
+        vy: (Math.random() - 0.5) * 0.18,
+        z:  z,
+        r:  0.5 + z * 1.8,
+        a:  0.07 + z * 0.18
+      });
+    }
+  }
+
+  function breathStep() {
+    if (!bW || !breathCtx) return;
+    var cx = bW / 2, cy = bH / 2;
+    breathCtx.clearRect(0, 0, bW, bH);
+    for (var i = 0; i < breathParts.length; i++) {
+      var p  = breathParts[i];
+      var dx = cx - p.x, dy = cy - p.y, dist = Math.sqrt(dx*dx + dy*dy) || 1;
+      p.vx += (dx / dist) * 0.010 + (Math.random() - 0.5) * 0.025;
+      p.vy += (dy / dist) * 0.010 + (Math.random() - 0.5) * 0.025;
+      p.vx *= 0.96; p.vy *= 0.96;
+      var par = 0.3 + p.z;
+      p.x += p.vx * par; p.y += p.vy * par;
+      if (dist < 20) {
+        var edge = Math.floor(Math.random() * 4);
+        p.x = edge === 1 ? bW : edge === 3 ? 0 : Math.random() * bW;
+        p.y = edge === 0 ? 0  : edge === 2 ? bH : Math.random() * bH;
+        p.vx = (Math.random() - 0.5) * 0.12;
+        p.vy = (Math.random() - 0.5) * 0.12;
+      }
+      var size = p.r * 8;
+      breathCtx.globalAlpha = Math.min(1, p.a);
+      breathCtx.drawImage(breathSprite, p.x - size / 2, p.y - size / 2, size, size);
+    }
+    breathCtx.globalAlpha = 1;
+    breathRaf = requestAnimationFrame(breathStep);
+  }
+
+  function startBreathParticles() {
+    if (!breathCanvas || !breathCtx) return;
+    stopBreathParticles();
+    sizeBreathCanvas();
+    buildBreathParticles();
+    /* Same explicit-inline approach as nnBody reveal: cancel any running
+       transition first, then set the target opacity so it takes effect. */
+    breathCanvas.style.transition = 'none';
+    breathCanvas.style.opacity    = '0';
+    void breathCanvas.offsetWidth;
+    breathCanvas.style.transition = 'opacity 600ms var(--ease-out)';
+    breathCanvas.style.opacity    = '1';
+    breathRaf = requestAnimationFrame(breathStep);
+  }
+
+  function stopBreathParticles() {
+    if (breathRaf) { cancelAnimationFrame(breathRaf); breathRaf = null; }
+    if (breathCanvas) {
+      breathCanvas.style.transition = 'none';
+      breathCanvas.style.opacity    = '0';
+    }
+    if (bW && breathCtx) breathCtx.clearRect(0, 0, bW, bH);
+  }
+
+  /* ---- State switcher ------------------------------------------------ */
+  function setState(s) { screen.setAttribute('data-heal-state', s); }
+
+  /* ---- Retrieve the user's core word (Deepen Q2, verbatim, never generated).
+     Empty -> the Summary's neutral placeholder. ----------------------- */
+  var WORD_PLACEHOLDER = 'something heavy';
+  function getUserWord() {
+    try {
+      var w = (D.Store.read().coreWord || '').trim();
+      return w.length ? w : WORD_PLACEHOLDER;
+    } catch (e) { return WORD_PLACEHOLDER; }
+  }
+
+  /* ---- Post-watch state (shared by Night 1 and Nights 2–9) ----------- */
+  var tomorrowEl  = document.getElementById('heal-tomorrow');
+  var btnDone     = document.getElementById('heal-done');
+  var btnRewatch  = document.getElementById('heal-rewatch');
+
+  /* setPostState: switches to the appropriate post-watch state for `night`
+     and writes the guidance line. Called from two places:
+     — dismissReminder() on Night 1
+     — the healRewatch branch in onEnter for Nights 2–9 (and Night 1 rewatch) */
+  function setPostState(night) {
+    tomorrowEl.textContent = 'Come back tomorrow for Night ' + (night + 1) + '.';
+    setState(night === 1 ? '1-post' : 'n-post');
+  }
+
+  /* "Rest now" closes the session — same action as the persistent X.
+     The message is already delivered by the time the user taps this; the
+     session ends without additional commentary. */
+  btnDone.addEventListener('click', function () {
+    document.getElementById('frame').classList.remove('is-ready');
+  });
+
+  /* "Watch again" — flags the return so the night counter does not increment,
+     then re-enters Watch. On return, the post-watch state shows again: the
+     user can rewatch as many times as they need without being counted. */
+  btnRewatch.addEventListener('click', function () {
+    stopBreathParticles();
+    try { D.Store.write({ healRewatch: true }); } catch (e) {}
+    D.navigateTo('screen-watch');
+  });
+
+  /* ---- Night 1 ------------------------------------------------------- */
+  var btnSetReminder  = document.getElementById('heal-set-reminder');
+  var btnSkipReminder = document.getElementById('heal-skip-reminder');
+  var timeInput       = document.getElementById('heal-time');
+  var reminderConfirm = document.getElementById('heal-reminder-confirm');
+
+  /* Format "HH:MM" (24h) → "9:00 PM" for the confirmation line. */
+  function formatTime(val) {
+    if (!val) return val;
+    var parts = val.split(':');
+    var h = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
+    var suffix = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return h + ':' + (m < 10 ? '0' + m : m) + ' ' + suffix; /* thin space */
+  }
+
+  /* "Set reminder" → confirmation state: "Reminder set for [TIME]" +
+     "Come back tomorrow for Night 2." No forward action; X exits.
+     "not now" → post-watch state: Rest now / Watch again / Come back. */
+
+  btnSetReminder.addEventListener('click', function () {
+    var t = timeInput.value;
+    try { D.Store.write({ reminderSet: true, reminderTime: t }); } catch (e) {}
+    reminderConfirm.textContent = 'Reminder set for ' + formatTime(t) + '.';
+    setState('1r');
+  });
+
+  btnSkipReminder.addEventListener('click', function () {
+    /* Mark as asked — never shown again. Go to post-watch, not confirmation. */
+    try { D.Store.write({ reminderSet: true }); } catch (e) {}
+    setPostState(1);
+  });
+
+  /* ---- Nights 2–9 — pre-watch ---------------------------------------- */
+  var nightMarker   = document.getElementById('heal-night-marker');
+  var btnWatchAgain = document.getElementById('heal-watch-again');
+
+  btnWatchAgain.addEventListener('click', function () {
+    stopBreathParticles();
+    try { D.Store.write({ healRewatch: true }); } catch (e) {}
+    D.navigateTo('screen-watch');
+  });
+
+  /* ---- Night 10 question --------------------------------------------- */
+  var input10      = document.getElementById('heal-10-input');
+  var btn10Cont    = document.getElementById('heal-10-continue');
+  var btn10Skip    = document.getElementById('heal-10-skip');
+
+  function showSummary() {
+    /* Top layer: what they carried in — coreWord verbatim, or neutral fallback. */
+    var coreWord = getUserWord();
+    var carriedEl = document.getElementById('heal-summary-carried');
+    if (carriedEl) carriedEl.textContent = 'You came in carrying ' + coreWord + '.';
+
+    /* Center: their Night 10 answer verbatim. "skipped" sentinel -> placeholder. */
+    var answerEl = document.getElementById('heal-summary-answer');
+    if (answerEl) {
+      var raw = '';
+      try { raw = (D.Store.read().night10Answer || '').trim(); } catch (e) {}
+      var isSkipped = !raw || raw === 'skipped';
+      answerEl.textContent = isSkipped ? 'something different' : raw;
+      answerEl.classList.toggle('is-placeholder', isSkipped);
+    }
+
+    setState('10s');
+  }
+
+  btn10Cont.addEventListener('click', function () {
+    try { D.Store.write({ night10Answer: input10.value.trim() || 'skipped' }); } catch (e) {}
+    showSummary();
+  });
+
+  btn10Skip.addEventListener('click', function () {
+    try { D.Store.write({ night10Answer: 'skipped' }); } catch (e) {}
+    showSummary();
+  });
+
+  /* ---- Night 10 Summary — closing animation --------------------------- */
+  var btnCarry   = document.getElementById('heal-carry');
+  var closeEl    = document.getElementById('heal-close');
+  var closeWord  = document.getElementById('heal-close-word');
+  var closeLine  = document.getElementById('heal-close-line');
+  var body10s    = screen.querySelector('.heal-10s');
+  var footer     = document.getElementById('safety-footer');
+
+  /* Cancel any in-progress breath on re-entry (e.g. X mid-breath then
+     re-enter Watch → Heal). Clears inline style overrides so CSS rules
+     take back control without a flash. */
+  function resetBreath() {
+    if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; }
+    screen.style.transition  = '';
+    screen.style.opacity     = '';
+    nnBody.style.transition  = '';
+    nnBody.style.opacity     = '';
+    nnBody.style.visibility  = '';
+    stopBreathParticles();
+  }
+
+  var closeTimers = [];
+  function laterClose(fn, ms) { var id = setTimeout(fn, ms); closeTimers.push(id); }
+
+  function resetClose() {
+    closeTimers.forEach(clearTimeout); closeTimers = [];
+    closeEl.classList.remove('is-in');
+    closeWord.style.transition   = 'none'; closeWord.style.opacity   = '0';
+    closeLine.style.transition   = 'none'; closeLine.style.opacity   = '0';
+    body10s.style.transition     = '';     body10s.style.opacity     = '';
+    body10s.style.visibility     = '';
+    footer.style.transition      = '';     footer.style.opacity      = '';
+  }
+
+  btnCarry.addEventListener('click', function () {
+    btnCarry.style.pointerEvents = 'none';   /* no double-tap */
+
+    /* Capture the word before any DOM changes */
+    var answerEl = document.getElementById('heal-summary-answer');
+    var word = answerEl ? answerEl.textContent : 'something different';
+
+    /* This closing is gentle opacity cross-fades only — no transform, no
+       parallax — so it plays at full duration regardless of
+       prefers-reduced-motion. Same clinical-motion philosophy as the mic
+       pulse: the very common "Windows: animations off" user should still
+       receive the ritual, not have it stripped to a flicker. The word stays
+       absolutely centered (CSS top:50%) so it never shifts as things fade. */
+    var t1    = 800;    /* surrounding elements fade out                     */
+    var t2    = 600;    /* word fades in on black                            */
+    var hold1 = 3000;   /* word holds alone                                  */
+    var t3    = 1200;   /* word fades out                                    */
+    var t4    = 1000;   /* farewell line fades in (ease-in) — final state    */
+
+    /* ── Step 2 (t=0): fade out heal-10s and footer; black overlay fades in ── */
+    body10s.style.transition = 'opacity ' + t1 + 'ms ease-out, visibility 0s linear ' + t1 + 'ms';
+    body10s.style.opacity    = '0';
+    body10s.style.visibility = 'hidden';
+    footer.style.transition  = 'opacity ' + t1 + 'ms ease-out';
+    footer.style.opacity     = '0';
+    closeWord.textContent    = word;
+    closeEl.classList.add('is-in');   /* black overlay fades in concurrently (800ms) */
+
+    /* ── Step 3 (t=t1): word fades in on black, holds 3000ms ── */
+    laterClose(function () {
+      closeWord.style.transition = 'opacity ' + t2 + 'ms ease-out';
+      void closeWord.offsetWidth;
+      closeWord.style.opacity = '1';
+    }, t1);
+
+    /* ── Step 4 (t=t1+t2+hold1): word fades out over 1200ms ── */
+    laterClose(function () {
+      closeWord.style.transition = 'opacity ' + t3 + 'ms ease-out';
+      closeWord.style.opacity    = '0';
+    }, t1 + t2 + hold1);
+
+    /* ── Step 5 (t=…+t3): farewell line fades in over 1000ms (ease-in).
+       Line is the final state — it stays visible until the user taps X. ── */
+    laterClose(function () {
+      closeLine.style.transition = 'opacity ' + t4 + 'ms ease-in';
+      void closeLine.offsetWidth;
+      closeLine.style.opacity = '1';
+    }, t1 + t2 + hold1 + t3);
+
+    /* ── No fade-out on the line. Black screen + farewell line + X only. ── */
+    window.onExit = function () {
+      closeTimers.forEach(clearTimeout);
+      footer.style.transition = '';
+      footer.style.opacity    = '';
+      document.getElementById('frame').classList.remove('is-ready');
+    };
+  });
+
+  /* ---- Delete · start over ------------------------------------------- */
+  var btnDelete       = document.getElementById('heal-delete');
+  var confirmOverlay  = document.getElementById('heal-confirm');
+  var btnConfirmDel   = document.getElementById('heal-confirm-delete');
+  var btnConfirmKeep  = document.getElementById('heal-confirm-keep');
+
+  btnDelete.addEventListener('click', function () { confirmOverlay.classList.add('is-shown'); });
+  btnConfirmKeep.addEventListener('click', function () { confirmOverlay.classList.remove('is-shown'); });
+
+  btnConfirmDel.addEventListener('click', function () {
+    /* Clear everything — real session and any demo overlay — then return to
+       Record as a first-time user (the film no longer exists). */
+    try { localStorage.removeItem('dreamai.v1'); } catch (e) {}
+    try { sessionStorage.removeItem('dreamai.demo'); } catch (e) {}
+    confirmOverlay.classList.remove('is-shown');
+    document.getElementById('screen-record').setAttribute('data-rec-variant', 'first');
+    D.navigateTo('screen-record');
+  });
+
+  /* ---- Heal entry — night determination ------------------------------ */
+  /* Named so it can be called immediately when boot already navigated here
+     before this script registered the handler (demo mode: the boot IIFE
+     runs inside the skeleton script, before screen-specific scripts load). */
+  function healEnter() {
+    var s = D.Store.read();
+    var night;
+    var isRewatch = !!s.healRewatch;
+
+    if (isRewatch) {
+      /* Returning from Watch on the same night — consume the flag, keep
+         the current night number, and show the post-watch state. */
+      try { D.Store.write({ healRewatch: false }); } catch (e) {}
+      night = s.healNight || 1;
+    } else {
+      /* New night: increment, cap at 10 so Night 10 is re-enterable. */
+      night = Math.min((s.healNight || 0) + 1, 10);
+      try { D.Store.write({ healNight: night }); } catch (e) {}
+    }
+
+    /* Reset transient state on every entry */
+    confirmOverlay.classList.remove('is-shown');
+    input10.value = '';
+    btnCarry.style.opacity = '';
+    btnCarry.style.pointerEvents = '';
+    btnCarry.removeAttribute('aria-hidden');
+    resetBreath();  /* cancel any in-progress breath, restore CSS control */
+    resetClose();   /* cancel any in-progress close animation, clear inline styles */
+
+    if (isRewatch) {
+      /* Post-watch: return from Watch (or rewatch) on any night up to 9. */
+      setPostState(night);
+    } else if (night === 1) {
+      /* First Night 1 arrival: mechanism + reminder.
+         If reminder was already asked in a prior session, go straight to
+         the post-watch state — mechanism has been seen, no need to repeat. */
+      if (s.reminderSet) {
+        setPostState(1);
+      } else {
+        setState('1');
+      }
+    } else if (night <= 9) {
+      /* Nights 2–9 — held-breath entry. The user has been here before; the
+         space is already waiting. The screen fades in (800ms), then 1500ms of
+         silence with sparse ambient particles, then the night marker and Watch
+         button fade in. This is gentle opacity-only motion plus slow, sparse
+         particle drift — no transform/parallax — so it plays for EVERY user,
+         including reduced-motion / "Windows: animations off". Same clinical
+         decision as the mic pulse: gentle co-regulating motion is the point;
+         stripping it would remove the ritual the breath exists to create.
+         Runs identically in normal flow and demo boot (?night=N). */
+      nightMarker.textContent = 'Night ' + night + ' of 10';
+      var breathHold = 1500;
+
+      /* Fade the screen in over 800ms. Works whether the screen just became
+         is-active (normal flow) or was already visible (demo boot): force
+         opacity to 0, flush, then transition to 1. */
+      screen.style.transition = 'none';
+      screen.style.opacity    = '0';
+      void screen.offsetWidth;
+      screen.style.transition = 'opacity 800ms var(--ease-out)';
+      screen.style.opacity    = '1';
+
+      /* Suppress content — CSS wants heal-nn visible (state="n"), inline wins. */
+      nnBody.style.transition = 'none';
+      nnBody.style.opacity    = '0';
+      nnBody.style.visibility = 'hidden';
+      setState('n');
+
+      /* Ambient particles appear immediately, persist through the hold and
+         beyond — the signal that the space is alive while the breath is held. */
+      startBreathParticles();
+
+      breathTimer = setTimeout(function () {
+        breathTimer = null;
+        screen.style.transition = '';
+        screen.style.opacity    = '';
+        /* Reveal content with a gentle fade. transition:none + a reflow first
+           commits the suppressed (opacity:0) state so the explicit opacity:1
+           below transitions cleanly rather than snapping. */
+        var dur = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-duration')) || 300;
+        nnBody.style.transition = 'none';
+        void nnBody.offsetWidth;
+        nnBody.style.transition = 'opacity ' + dur + 'ms var(--ease-out)';
+        nnBody.style.opacity    = '1';
+        nnBody.style.visibility = 'visible';
+      }, breathHold);
+    } else {
+      /* Night 10: question gate before Summary. */
+      setState('10q');
+    }
+
+    /* X on Heal and "Rest now" both close the app. */
+    window.onExit = function () {
+      document.getElementById('frame').classList.remove('is-ready');
+    };
+  }
+
+  D.onEnter('screen-heal', healEnter);
+
+  /* Boot runs navigateTo('screen-heal') before this script loads, so the
+     onEnter above is registered too late for that first navigation. If the
+     screen is already active when this script executes, run the init now. */
+  if (D.currentScreen && D.currentScreen.id === 'screen-heal') healEnter();
+})();
+</script>
+</body>
+</html>
