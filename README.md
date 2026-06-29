@@ -1,6 +1,8 @@
 # Dream AI — Image Rehearsal Therapy Prototype
 
 > A trauma-informed Image Rehearsal Therapy prototype — designed, built, and reasoned about end-to-end with AI.
+> 
+![Dream AI — Record screen](dream-ai-02.PNG)
 
 ---
 
@@ -80,6 +82,8 @@ This reasoning is preserved from the build session, not a code comment:
 The tension was giving the user control over re-recording without inviting a second-guess about whether the first attempt was "good enough." A visible "re-record" button does two things at once: it offers control, and it implies the previous take might not have been sufficient. For this user, that implication lands before the control does.
 
 "Again" stays neutral about the reason. It serves the person who wasn't ready, the person who got interrupted, the person who said something they didn't mean to — without naming or assuming any of those reasons. One word, doing the work that a more "complete" UI pattern would have done worse.
+
+![The 'again' option, shown at skip-level opacity below the primary action](dream-ai-03.PNG)
 
 ---
 
